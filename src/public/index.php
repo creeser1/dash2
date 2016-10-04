@@ -130,7 +130,7 @@ $app->get('/edit/{id}', function ($request, $response, $args) {
 		}
 		return $this->view->render($response, $template, [
 			'page' => $page,
-			'ses' => $token // without token page is not editable
+			'ses' => $token64 // without token page is not editable
 		]);
 	} else {
 		$this->logger->addInfo('Requested missing page: /edit/'.$args['id']);
