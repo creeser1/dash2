@@ -101,6 +101,7 @@ $app->get('/dashboard/{id}', function ($request, $response, $args) {
 		$template = $page['pagetemplate'].'.html';
 		$this->logger->addInfo('published page');
 		$this->logger->addInfo($template);
+		$page['iseditable'] = false;
 		return $this->view->render($response, $template, [
 			'page' => $page // no token, not editable
 		]);
@@ -128,6 +129,7 @@ $app->get('/edit/{id}', function ($request, $response, $args) {
 		if (is_array($headerValueArray) and isset($headerValueArray[0])) {
 			$token64 = $headerValueArray[0]; // just pass it along
 		}
+		$page['iseditable'] = true;
 		return $this->view->render($response, $template, [
 			'page' => $page,
 			'ses' => $token64 // without token page is not editable
