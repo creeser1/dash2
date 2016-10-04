@@ -28,7 +28,7 @@ $container['data'] = function ($container) {
     $view = new \Slim\Views\Twig('../data', [
         'cache' => false /*'../cache'*/
     ]);
-	$container->logger->addInfo('dir: '.__DIR__.'/../templates');
+	$container->logger->addInfo('_dir_: '.__DIR__.'/../templates');
 
     $view->addExtension(new \Slim\Views\TwigExtension(
         $container['router'],
