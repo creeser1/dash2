@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>{{ page.htmltitle }}</title>
+<link href="/static/global/img/csyoufavicon.ico" rel="icon" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="{{ page.style }}" />
+<script src="/static/global/js/all_pcore.js"></script>
+</head><body data-app="{{ page.app }}" data-ses="{{ ses }}">
+
+<header id="top" class="banner" role="banner">
+	<a class="offscreen" href="#maincontent">skip to content</a>
+	<img src="/static/global/img/branding.png" width="803" height="108" alt="" /> 
+</header>
+
+<section id="maincontent" class="container" role="main">
+
+<div class="title-bar"><h1>{{ page.title }}</h1></div>
+
+{% block control %}
+	<!-- various controls go here -->
+{% endblock %}
+
+{% if page.tabs|length > 0 %}
+<ul class="nav nav-tabs tabtab" role="tablist">
+{% for tab in page.tabs %}
+	<li{{ tab.isactive ? ' class="active"' }}><a href="#{{ tab.anchor }}" role="tab" tabindex="0">{{ tab.label }}</a></li>
+{% endfor %}
+</ul>
+
+<div class="tab-content"> <!-- wraps major tabbed area -->
+{% for tab in page.tabs %}
+<div id="{{ tab.anchor }}" class="tab-pane fade {{ tab.isactive ? 'in active'}}">
+	<!-- content of tab would get embedded here  -->
+	<div{{ tab.iseditable ? ' class="editable"'}}>
+		{{ tab.content|raw }}
+	</div>
+</div><!-- end of tab area  -->
+{% endfor %}
+</div><!--./tab-content-->
+{% endif %}
+
+
+
+</section><!-- ./container #maincontent -->
+
+{% block footer %}
+{% endblock %}
+
+<script src="/static/global/js/all_gcore.js"></script>
+{% block pagescripts %}
+<script type="application/javascript">
+	$('.nav-tabs a').click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		$(this).tab('show');
+	});
+</script>
+{% endblock %}
+
+{% block analytics %}
+{% endblock %}
+</body></html>
