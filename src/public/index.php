@@ -119,7 +119,8 @@ $app->get('/edit/{id}', function ($request, $response, $args) {
 		$id = $whitelist[$args['id']];
 		$builder = new PageConfigurator('bublin', $this->db);
 		$page = $builder->loadPage($id);
-		$template = $page['edittemplate'].'.html';
+		$template = $page['pagetemplate'].'.html';
+		$page['iseditable'] = true;
 		$token64 = '';
 		$headerValueArray = $request->getHeader('X-Auth-Token');
 		if (is_array($headerValueArray) and isset($headerValueArray[0])) {
