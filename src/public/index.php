@@ -25,7 +25,7 @@ $container['logger'] = function($c) {
 };
 
 $container['data'] = function ($container) {
-    $view = new \Slim\Views\Twig('../data', [
+    $view = new \Slim\Views\Twig(__DIR__.'/../data', [
         'cache' => false /*'../cache'*/
     ]);
 	$container->logger->addInfo('_dir_: '.__DIR__.'/../templates');
