@@ -28,6 +28,8 @@ $container['data'] = function ($container) {
     $view = new \Slim\Views\Twig('../data', [
         'cache' => false /*'../cache'*/
     ]);
+	$container->logger->addInfo('dir: '.__DIR__);
+
     $view->addExtension(new \Slim\Views\TwigExtension(
         $container['router'],
         $container['request']->getUri()
