@@ -1,0 +1,6 @@
+app/cache/*
+app/logs/*
+app/vendor/*
+app/site/*
+app/data/*
+app/db/*
