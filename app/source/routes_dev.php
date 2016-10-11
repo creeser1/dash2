@@ -32,7 +32,7 @@ $app->get('/data/{dataset:.*}', function ($request, $response, $args) {
 
 // normal read only access
 $app->get('/dashboard/{id}', function ($request, $response, $args) {
-	$whitelist = ['csu-comparisons' => '1', 'csu-peer-benchmarking' => '2', 'what-paths-do-they-follow' => '144', 'near-half-year-gradrates' => '174'];
+	$whitelist = ['csu-comparisons' => '1', 'csu-peer-benchmarking' => '2', 'what-paths-do-they-follow' => '144', 'near-half-year-gradrates' => '174', 'bottleneck-courses' => '179'];
 	if (array_key_exists($args['id'], $whitelist)) {
 		$id = $whitelist[$args['id']];
 		$builder = new PageConfigurator('bublin', $this->db);
@@ -56,7 +56,7 @@ $app->get('/dashboard/{id}', function ($request, $response, $args) {
 // will require authentication and authorization to save edits
 $app->get('/edit/{id}', function ($request, $response, $args) {
 	$this->logger->addInfo('get /edit/'.$args['id']);
-	$whitelist = ['csu-comparisons' => '1', 'csu-peer-benchmarking' => '2', 'what-paths-do-they-follow' => '144', 'near-half-year-gradrates' => '174'];
+	$whitelist = ['csu-comparisons' => '1', 'csu-peer-benchmarking' => '2', 'what-paths-do-they-follow' => '144', 'near-half-year-gradrates' => '174', 'bottleneck-courses' => '179'];
 	if (array_key_exists($args['id'], $whitelist)) { // avoid database auth lookups on non-whitelisted pages
 		$id = $whitelist[$args['id']];
 		$builder = new PageConfigurator('bublin', $this->db);
