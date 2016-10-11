@@ -1,0 +1,45 @@
+* {
+margin:0;
+padding:0;
+}
+
+body {
+	font-family:sans-serif;
+	font-size:16px;
+	color:#111;
+	background:#fff;
+	line-height:1.5em;
+}
+#maincontent {
+	margin:20px;
+}
+h1, h2, h3, h4, h5, h6 {
+	color:#111;
+	margin:5px 20px 10px;
+	font-size:2em;
+}
+dl {
+	position:relative;
+	display:block;
+}
+dd {
+	display:block;
+	min-height:100px;
+	margin:0 30px;
+}
+dt {
+	float:left;
+	display:block;
+	width:100%;
+	margin:20px 20px 0;
+}
+dd p {
+	float:left;
+	width:300px;
+}
+dd img {
+	float:left;
+	margin:0 0 0 30px;
+	width:200px;
+	border:1px solid #111;
+}
