@@ -68,3 +68,37 @@ select{margin:0 10px}tbody tr td.nowrap{min-width:3em;text-align:right}.footnote
 	border-radius:10px;
 	color:transparent;
 }
+
+
+footer {
+	display:block;
+	height:50px;
+	width:1150px;
+	margin:40px auto -40px;
+	background:#45a;
+	color:#fff;
+}
+
+footer .back {
+	display:inline-block;
+	width:240px;
+	text-align:center;
+}
+footer .feedback {
+	display:inline-block;
+	width:200px;
+	text-align:center;
+}
+footer a {
+	line-height:50px;
+	color:#f7f7f7;
+	text-decoration:none;
+}
+footer a:hover {
+	line-height:50px;
+	color:#fff;
+}
+footer .centeredline {
+	width:500px;
+	margin:0 auto;
+}

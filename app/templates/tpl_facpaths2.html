@@ -48,6 +48,19 @@
 {% endif %}
 {% endblock %}
 
+{% block footer %}
+<footer>
+	<div class="centeredline">
+	<div class="back">
+		<a href="" title="return to dashboard">Dashboard Home</a> | <a href="faculty-dashboard" title="faculty home"><b>Faculty Home</b></a>
+	</div>
+	<div class="feedback">
+		<a href="" title="Give us Feedback">Give Us Feedback</a>
+	</div>
+	</div>
+</footer>
+{% endblock %}
+
 {% block pagescripts %}
 <script src="/static/global/js/all_gcore.js"></script>
 {% if page.scripts|length > 0 %}
