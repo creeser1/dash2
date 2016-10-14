@@ -1,0 +1,69 @@
+{% extends "base1.html" %}
+
+{% block headscripts %}
+{% endblock %}
+{% block header %}
+<header id="top" class="banner" role="banner">
+	<a class="offscreen" href="#maincontent">skip to content</a>
+	<img src="/static/global/img/branding.png" width="803" height="108" alt="" /> 
+</header>
+{% endblock %}
+
+{% block sitenav %}
+{% endblock %}
+{% block subnav %}
+{% endblock %}
+
+{% block contentheader %}
+{% endblock %}
+
+{% block specialcontent %}
+<div id="leftpanel">
+<img src="/static/page/faclan/facultyopt.png">
+<a class="homebtn" href="/"><img src="/static/global/img/home-btn-faculty.png" alt="Home Button" /></a>
+<h1>{{ page.title }}</h1>
+<p>{{ page.subtitle }}</p>
+<a class="audplaybtn" href="#"><img src="{{ page.audio.img }}">{{page.audio.text}}</a>
+</div>
+
+<div id="rightpanel">
+<h1>{{ page.navheading }}</h1>
+{% if page.dotnav|length > 0 %}
+<div id="navpanels">
+{% for navdot in page.dotnav %}
+{% if navdot.type == 'heading' %}
+<figure><h2>{{ navdot.text }}</h2></figure>
+{% else %}
+<a href="{{ navdot.href }}" title="{{ navdot.title }}">
+<figure><img src="{{ navdot.img }}"/><p>{{ navdot.text }}</p></figure></a>
+{% endif %}
+{% endfor %}
+</div>
+{% endif %}
+
+<a id="exploredatabtn" href="#">{{ page.exploretext }}</a>
+<div id="hoverbox"></div> <!-- tooltip replacement -->
+</div> <!-- end leftpanel -->
+{% endblock %}
+
+{% block footer %}
+<footer>
+	<div class="centeredline">
+	<div class="back">
+		<a href="" title="return to dashboard">Dashboard Home</a> | <a href="faculty-dashboard" title="faculty home"><b>Faculty Home</b></a>
+	</div>
+	<div class="feedback">
+		<a href="" title="Give us Feedback">Give Us Feedback</a>
+	</div>
+	</div>
+</footer>
+{% endblock %}
+
+{% block pagescripts %}
+{% if page.scripts|length > 0 %}
+{% for scriptsrc in page.scripts %}
+<script src="{{ scriptsrc }}"></script>
+{% endfor %}
+{% endif %}
+{% endblock %}
+

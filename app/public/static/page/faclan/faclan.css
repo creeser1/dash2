@@ -1,0 +1,171 @@
+* {
+	padding:0;
+	margin:0;
+}
+
+body {
+	font-size:16px;
+	font-family:sans-serif;
+	color:#111;
+	position:relative;
+}
+#maincontent {
+	background#eef;
+	width:1170px;
+	margin:0 auto;
+	padding:0;
+}
+#leftpanel {
+	position:relative;
+	width:293px;
+	height:810px;
+	float:left;
+	color:#f7f7f7;
+}
+
+#leftpanel .homebtn {
+	position:absolute;
+	left:15px;
+	top:10px;
+}
+
+#leftpanel h1 {
+	position:absolute;
+	left:15px;
+	top:35px;
+}
+
+#leftpanel p {
+	position:absolute;
+	left:15px;
+	top:245px;
+	width:260px;
+	font-size:1.1em;
+}
+
+#leftpanel .audplaybtn img {
+	float:left;
+	margin-right:10px;
+	height:55px;
+}
+
+#leftpanel .audplaybtn {
+	position:absolute;
+	left:15px;
+	top:533px;
+	width:260px;
+	font-size:1.05em;
+	font-weight:600;
+	color:#f7f7f7;
+}
+
+#rightpanel {
+	position:relative;
+	width:877px;
+	height:810px;
+	float:left;
+	background:url('facbackgroundopt.png');
+}
+
+#rightpanel h1 {
+	font-size:1.7em;
+	margin:20px 0 0 30px;
+	color:#555;
+}
+
+#rightpanel figure img {
+	border:1px solid #aaa;
+	box-shadow:3px 3px 5px #888;
+}
+
+#rightpanel figure h2 {
+	width:185px;
+	height:100px;
+	margin:50px 0 0 60px;
+	text-align:left;
+	font-size:1.7em;
+	line-height:1.18em;
+	color:#555;
+}
+
+#rightpanel figure p {
+	width:215px;
+	margin:17px auto;
+	text-align:center;
+	font-weight:600;
+	font-size:0.95em;
+	line-height:1.2em;
+	color:#555;
+}
+
+#rightpanel figure {
+	width:228px;
+	height:190px;
+	margin:30px 32px 0;
+	float:left;
+}
+#hoverbox {
+	visibility:hidden;
+	width:220px;
+	height:90px;
+	position:absolute;
+	z-index:20;
+	background:#333;
+	color:#fff;
+	font-size:14px;
+	padding:10px;
+}
+
+#navpanels {
+	position:relative;
+	width:100%;
+	height:100%;
+	z-index:2;
+}
+
+#exploredatabtn {
+	width:70px;
+	color:#f7f7f7;
+	font-weight:600;
+	font-size:0.95em;
+	position:absolute;
+	left:680px;
+	top:698px;
+	z-index:2;
+	text-align:center;
+}
+
+footer {
+	display:block;
+	height:50px;
+	width:1170px;
+	margin:0 auto;
+	background:#45a;
+	color:#fff;
+}
+
+footer .back {
+	display:inline-block;
+	width:240px;
+	text-align:center;
+	float:left;
+}
+footer .feedback {
+	display:inline-block;
+	width:200px;
+	text-align:center;
+	float:left;
+}
+footer a {
+	line-height:50px;
+	color:#f7f7f7;
+	text-decoration:none;
+}
+footer a:hover {
+	line-height:50px;
+	color:#fff;
+}
+footer .centeredline {
+	width:500px;
+	margin:0 auto;
+}

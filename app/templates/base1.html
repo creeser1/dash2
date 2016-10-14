@@ -3,9 +3,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>{{ page.htmltitle }}</title>
+{% block headlinks %}
 <link href="/static/global/img/csyoufavicon.ico" rel="icon" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" href="{{ page.style }}" />
+{% endblock %}
+{% block headscripts %}
 <script src="/static/global/js/all_pcore.js"></script>
+{% endblock %}
 </head><body data-app="{{ page.app }}" data-ses="{{ ses }}">
 
 {% block header %}
@@ -25,6 +29,9 @@
 {% endblock %}
 
 {% block contentsubheader %}
+{% endblock %}
+
+{% block specialcontent %}
 {% endblock %}
 
 {% if page.tabs|length > 0 %}
