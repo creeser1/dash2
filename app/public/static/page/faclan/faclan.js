@@ -103,13 +103,19 @@
 			}
 		};
 
-		figtitles.forEach(function (el) {
-			el.addEventListener('mouseenter', showtitle, false);
-			el.addEventListener('mouseover', showtitle, false);
-			el.addEventListener('mouseout', function (e) {
-				hoverbox.style.visibility = 'hidden';
-			}, false);
-		});
+		//figtitles.forEach(function (el) {
+		var el;
+		//console.log(figtitles);
+		for (el in figtitles) { // because ie fails on figtitles.forEach
+			if (figtitles.hasOwnProperty(el)) {
+				//console.log(el);
+				figtitles[el].addEventListener('mouseenter', showtitle, false);
+				figtitles[el].addEventListener('mouseover', showtitle, false);
+				figtitles[el].addEventListener('mouseout', function (e) {
+					hoverbox.style.visibility = 'hidden';
+				}, false);
+			}
+		}
 	}; // end create_path_animation
 	
 	var init = function () {
