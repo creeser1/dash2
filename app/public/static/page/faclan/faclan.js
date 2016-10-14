@@ -1,34 +1,19 @@
 (function () {
 	'use strict';
 
-	var animatelineh = function (ctx, y, increment, end, finish, callback) {
-		if (increment < 0 && end <= finish) {
+	var animatelinexy = function (ctx, axis, xy, increment, end, finish, callback) {
+		if ((increment < 0 && end <= finish) || (increment > 0 && end >= finish)) {
 			window.setTimeout(callback, 0);
 			return;
 		}
-		if (increment > 0 && end >= finish) {
-			window.setTimeout(callback, 0);
-			return;
+		if (axis === 'x') {
+			ctx.lineTo(end, xy);
+		} else {
+			ctx.lineTo(xy, end);
 		}
-		ctx.lineTo(end,y);
 		ctx.stroke();
 		//recurse
-		window.setTimeout(function () {animatelineh(ctx, y, increment, end + increment, finish, callback)}, 0);
-	};
-	
-	var animatelinev = function (ctx, x, increment, end, finish, callback) {
-		if (increment < 0 && end <= finish) {
-			window.setTimeout(callback, 0);
-			return;
-		}
-		if (increment > 0 && end >= finish) {
-			window.setTimeout(callback, 0);
-			return;
-		}
-		ctx.lineTo(x, end);
-		ctx.stroke();
-		//recurse
-		window.setTimeout(function () {animatelinev(ctx, x, increment, end + increment, finish, callback)}, 0);
+		window.setTimeout(function () {animatelinexy(ctx, axis, xy, increment, end + increment, finish, callback)}, 0);
 	};
 
 	var create_path_animation = function (canvasid, panelid, width, height) {
@@ -38,7 +23,7 @@
 		canvas.width = width;
 		canvas.height = height;
 
-		canvas.id = 'pathway';
+		canvas.id = canvasid;
 		panel.appendChild(canvas);
 		
 		var ctx = canvas.getContext('2d');
@@ -54,12 +39,12 @@
 		ctx.beginPath();
 		ctx.moveTo(30,275);
 
-		animatelineh(ctx, 275, 5, 35, 865, function () {
-			animatelinev(ctx, 860, 5, 280, 500, function () {
-				animatelineh(ctx, 495, -5, 490, 15, function () {
-					animatelinev(ctx, 20, 5, 500, 725, function () {
-						animatelineh(ctx, 720, 5, 25, 790, function () {
-							animatelinev(ctx, 785, 5, 725, 780, function () {
+		animatelinexy(ctx, 'x', 275, 5, 35, 865, function () {
+			animatelinexy(ctx, 'y', 860, 5, 280, 500, function () {
+				animatelinexy(ctx, 'x', 495, -5, 490, 15, function () {
+					animatelinexy(ctx, 'y', 20, 5, 500, 725, function () {
+						animatelinexy(ctx, 'x', 720, 5, 25, 790, function () {
+							animatelinexy(ctx, 'y', 785, 5, 725, 780, function () {
 								ctx.beginPath();
 								ctx.moveTo(645,720);
 								ctx.lineTo(714,680);
@@ -68,7 +53,6 @@
 								ctx.closePath();
 								ctx.fill();
 								ctx.stroke();
-
 							});
 						});
 					});
@@ -137,5 +121,4 @@
 		);
 	};
 	init();
-
 })();
