@@ -1,7 +1,8 @@
 (function () {
 	'use strict';
 
-	var animatelinexy = function (ctx, axis, xy, increment, end, finish, callback) {
+	var animatelinexy;
+	animatelinexy = function (ctx, axis, xy, increment, end, finish, callback) {
 		if ((increment < 0 && end <= finish) || (increment > 0 && end >= finish)) {
 			window.setTimeout(callback, 0);
 			return;
@@ -13,7 +14,9 @@
 		}
 		ctx.stroke();
 		//recurse
-		window.setTimeout(function () {animatelinexy(ctx, axis, xy, increment, end + increment, finish, callback)}, 0);
+		window.setTimeout(function () {
+			animatelinexy(ctx, axis, xy, increment, end + increment, finish, callback);
+		}, 0);
 	};
 
 	var create_path_animation = function (canvasid, panelid, width, height) {
@@ -59,7 +62,9 @@
 				});
 			});
 		});
-
+	};
+	var create_tooltips = function () {
+		var hoverbox = document.querySelector('#hoverbox');
 		var figtitles = document.querySelectorAll('#navpanels a'); // a wraps figure wraps img and p
 		var titles = {}; // closure dict keeps anchor title text after native hover display defeated
 
@@ -104,17 +109,17 @@
 		};
 
 		//figtitles.forEach(function (el) {
-		var el;
+		var i;
 		//console.log(figtitles);
-		for (el in figtitles) { // because ie fails on figtitles.forEach
-			if (figtitles.hasOwnProperty(el)) {
-				//console.log(el);
-				figtitles[el].addEventListener('mouseenter', showtitle, false);
-				figtitles[el].addEventListener('mouseover', showtitle, false);
-				figtitles[el].addEventListener('mouseout', function (e) {
-					hoverbox.style.visibility = 'hidden';
-				}, false);
-			}
+		var ftkeys = Object.keys(figtitles);
+		var hidetooltip = function () {
+			hoverbox.style.visibility = 'hidden';
+		};
+		for (i = 0; i < ftkeys.length; i += 1) { // because ie fails on figtitles.forEach
+			//console.log(el);
+			figtitles[ftkeys[i]].addEventListener('mouseenter', showtitle, false);
+			figtitles[ftkeys[i]].addEventListener('mouseover', showtitle, false);
+			figtitles[ftkeys[i]].addEventListener('mouseout', hidetooltip, false);
 		}
 	}; // end create_path_animation
 	
@@ -125,6 +130,7 @@
 			'878',
 			'810'
 		);
+		create_tooltips();
 	};
 	init();
-})();
+}());
