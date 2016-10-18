@@ -33,7 +33,7 @@
 
 		ctx.strokeStyle = '#11c0d7';
 		ctx.fillStyle = '#11c0d7';
-		ctx.lineWidth = 4.5;
+		ctx.lineWidth = 5;
 
 		ctx.arc(20,275,9,0,2*Math.PI);
 		ctx.fill();
@@ -47,6 +47,7 @@
 				animatelinexy(ctx, 'x', 495, -5, 490, 15, function () {
 					animatelinexy(ctx, 'y', 20, 5, 500, 725, function () {
 						animatelinexy(ctx, 'x', 720, 5, 25, 790, function () {
+							ctx.lineWidth = 3;
 							animatelinexy(ctx, 'y', 785, 5, 725, 780, function () {
 								ctx.beginPath();
 								ctx.moveTo(645,720);

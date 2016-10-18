@@ -79,6 +79,8 @@ class UserLogin
 			$user_data['id'] = $user->getId();
 			$user_data['username'] = $user->getUsername();
 			$user_data['role'] = $user->getRole();
+			$user_data['created'] = $user->getCreated();
+			$user_data['expires'] = $user->getExpires();
 			$user = new UserEntity($user_data); /* create new PageEntity object from array */
 			$user_mapper->update($user);
 			return '{"token": "'.$token.'", "data": "'.$this->username.'"}';

@@ -1,4 +1,6 @@
 <?php
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
 //Routes
 
 /*some automated server monitoring expects this*/
@@ -142,6 +144,7 @@ $app->post('/login', function (Request $request, Response $response, $args) {
 	$this->logger->addInfo('---test usr: '.$username);
 	$this->logger->addInfo('---test pwd: '.$password);
 	$isAuthenticated = false;
+	$minPasswordLength = 8;
 	if (strlen($password) >= $minPasswordLength) {
 		$auth = new UserLogin($username, $this->db);
 		$isAuthenticated = $auth->authenticateUser($password);
@@ -163,6 +166,7 @@ $app->post('/login', function (Request $request, Response $response, $args) {
 
 //REMOVE FOR PROD
 $app->get('/login', function (Request $request, Response $response, $args) {
+	$this->logger->addInfo('---login: ');
 	return $this->view->render($response, 'login.html', [
 		'destination' => '/../login',
 		'message' => ''
