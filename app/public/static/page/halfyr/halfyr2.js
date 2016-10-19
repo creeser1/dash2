@@ -8,7 +8,7 @@
 			//return this.series.name + ': ' + this.y + '%\<br />Year: ' + this.point.name;
 			//console.log(this);
 			var yearnum = config.period.slice(0,1);
-			return 'Year: ' + this.points[0].point.name + '<br />' + this.points[0].point.dif + ' more students could have graduated<br />in ' + yearnum + ' years rather than a semester later';
+			return 'Year: ' + this.points[0].point.name + '<br />' + this.points[0].point.dif + ' more students graduated only one semester later';
 		};
 		var txt1 = 'Grad Rate %';
 		$('#chart1').highcharts({
