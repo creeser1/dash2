@@ -34,6 +34,7 @@ $app->get('/data/{dataset:.*}', function ($request, $response, $args) {
 
 // normal read only access
 $app->get('/dashboard/{id}', function ($request, $response, $args) {
+	//$whitelist = $this->env['whitelist']; 
 	$whitelist = [
 	'csu-comparisons' => '1',
 	'csu-peer-benchmarking' => '2',
@@ -65,6 +66,7 @@ $app->get('/dashboard/{id}', function ($request, $response, $args) {
 // will require authentication and authorization to save edits
 $app->get('/edit/{id}', function ($request, $response, $args) {
 	$this->logger->addInfo('get /edit/'.$args['id']);
+	//$whitelist = $this->env['whitelist'];
 	$whitelist = [
 	'csu-comparisons' => '1',
 	'csu-peer-benchmarking' => '2',

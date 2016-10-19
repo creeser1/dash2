@@ -43,3 +43,10 @@ $container['db'] = function ($c) {
 
     return $pdo;
 };
+
+$container['env'] = function ($c) {
+	$env = [
+		'whitelist' => $c['settings']['whitelist']
+	];
+	return $env;
+};

@@ -4,8 +4,11 @@
 	var cs = { // chart_state
 	};
 	var create_chart = function (config, data) {
-		var fmt1 = function () {
-			return this.series.name + ': ' + this.y + '%\<br />Year: ' + this.point.name;
+		var fmt1 = function (y,x) {
+			//return this.series.name + ': ' + this.y + '%\<br />Year: ' + this.point.name;
+			//console.log(this);
+			var yearnum = config.period.slice(0,1);
+			return 'Year: ' + this.points[0].point.name + '<br />' + this.points[0].point.dif + ' more students could have graduated<br />in ' + yearnum + ' years rather than a semester later';
 		};
 		var txt1 = 'Grad Rate %';
 		$('#chart1').highcharts({
@@ -38,7 +41,10 @@
 				}
 			},
 			tooltip: {
-				 formatter: fmt1
+				crosshairs: true,
+				split: false,
+				shared: true,
+				formatter: fmt1
 			},
 			legend: {
 				title: {style: {'color': '#777'}, text: ''},
@@ -103,23 +109,23 @@
 		var yr65 = [];
 		var ultimate_year = years.slice(-1)[0];
 		var penultimate_year = years.slice(-2,-1)[0];
-		console.log(JSON.stringify([ultimate_year, penultimate_year]));
+		//console.log(JSON.stringify([ultimate_year, penultimate_year]));
 		years.forEach(function (yr) {
 			var row = data[yr];
 			//console.log(JSON.stringify(row));
 			if (config.type === 'tr') {
-				yr2.push({"name": yr, "y": row[0][3]});
-				yr25.push({"name": yr, "y": row[0][4]});
-				yr3.push({"name": yr, "y": row[1][3]});
-				yr35.push({"name": yr, "y": (yr === ultimate_year ? null :row[1][4])});
-				yr4.push({"name": yr, "y": (yr === ultimate_year ? null : row[2][3])});
-				yr45.push({"name": yr, "y": (yr === ultimate_year || yr === penultimate_year ? null : row[2][4])});
+				yr2.push({"name": yr, "y": row[0][3], "dif": row[0][0]});
+				yr25.push({"name": yr, "y": row[0][4], "dif": row[0][0]});
+				yr3.push({"name": yr, "y": row[1][3], "dif": row[1][0]});
+				yr35.push({"name": yr, "y": (yr === ultimate_year ? null :row[1][4]), "dif": row[1][0]});
+				yr4.push({"name": yr, "y": (yr === ultimate_year ? null : row[2][3]), "dif": row[2][0]});
+				yr45.push({"name": yr, "y": (yr === ultimate_year || yr === penultimate_year ? null : row[2][4]), "dif": row[2][0]});
 			} else {
-				yr4.push({"name": yr, "y": row[2][3]});
-				yr45.push({"name": yr, "y": row[2][4]});
-				yr5.push({"name": yr, "y": row[3][3]});
-				yr55.push({"name": yr, "y": (yr === ultimate_year ? null : row[3][4])});
-				yr6.push({"name": yr, "y": (yr === ultimate_year ? null : row[4][3])});
+				yr4.push({"name": yr, "y": row[2][3], "dif": row[2][0]});
+				yr45.push({"name": yr, "y": row[2][4], "dif": row[2][0]});
+				yr5.push({"name": yr, "y": row[3][3], "dif": row[3][0]});
+				yr55.push({"name": yr, "y": (yr === ultimate_year ? null : row[3][4]), "dif": row[3][0]});
+				yr6.push({"name": yr, "y": (yr === ultimate_year ? null : row[4][3]), "dif": row[4][0]});
 				yr65.push({"name": yr, "y":  (yr === ultimate_year || yr === penultimate_year ? null :row[4][4])});
 			}
 		});
