@@ -155,7 +155,7 @@
 	};
 	
 	var get_campus_data = function (config, callback) {
-		console.log(JSON.stringify(config));
+		//console.log(JSON.stringify(config));
 		load_data(config, function (result) {
 			var selection = result[config.campus][config.type];
 			//console.log(JSON.stringify(selection));
@@ -175,7 +175,7 @@
 		var years = Object.keys(selection);
 		var ok = {};
 		years.forEach(function (yr) {
-			console.log(JSON.stringify([yr, selection[yr]]));
+			//console.log(JSON.stringify([yr, selection[yr]]));
 			if (selection[yr][0][3] !== null) {
 				ok['2yr'] = true;
 			}
@@ -210,7 +210,7 @@
 	};
 	
 	var init = function () {
-		var config = {'data_url': '/data/nearhalf_gradrates.json', 'campus': '*CSU System', 'type': 'tr', 'period': '2yr'};
+		var config = {'data_url': 'nearhalf_gradrates.json', 'campus': '*CSU System', 'type': 'tr', 'period': '2yr'};
 		$('#dataset_filter1').on('change', function (e) {
 			config.campus = e.target.value;
 			load_data(config, function (result) {
@@ -235,12 +235,13 @@
 				create_chart(config, data);
 			});
 		});
-			load_data(config, function (result) {
-				populate_filter3(config, result);
-			});
+		load_data(config, function (result) {
+			populate_filter3(config, result);
 			get_campus_data(config, function (config, data) {
 				create_chart(config, data);
 			});
+		});
+
 	};
 	init();
 }());
