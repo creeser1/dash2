@@ -137,16 +137,16 @@
 				output.push({"name": "4.5 Year Grad Rate", "color": "#a73", "data": yr45});
 				break;
 			case '5yr':
-				output.push({"name": "5 Year Grad Rate", "color": "#73a", "data": yr5});
-				output.push({"name": "5.5 Year Grad Rate", "color": "#a73", "data": yr55});
+				output.push({"name": "5 Year Grad Rate", "color": "#53c", "data": yr5});
+				output.push({"name": "5.5 Year Grad Rate", "color": "#c53", "data": yr55});
 				break;
 			case '6yr':
-				output.push({"name": "6 Year Grad Rate", "color": "#33a", "data": yr6});
-				output.push({"name": "6.5 Year Grad Rate", "color": "#a33", "data": yr65});
+				output.push({"name": "6 Year Grad Rate", "color": "#c35", "data": yr6});
+				output.push({"name": "6.5 Year Grad Rate", "color": "#5c3", "data": yr65});
 				break;
 			default:
-				output.push({"name": "2 Year Grad Rate", "color": "#37a", "data": yr2});
-				output.push({"name": "2.5 Year Grad Rate", "color": "#7a3", "data": yr25});
+				output.push({"name": "2 Year Grad Rate", "color": "#35c", "data": yr2});
+				output.push({"name": "2.5 Year Grad Rate", "color": "#3c5", "data": yr25});
 				break;
 		}
 		//console.log(JSON.stringify(years));
