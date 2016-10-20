@@ -565,6 +565,103 @@
 		});
 	};
 
+	var create_tables = function (config, data) {
+		console.log(JSON.stringify(config));
+		console.log(JSON.stringify(data));
+		var table1 = [];
+		var table2 = [];
+		var table3 = [];
+		var table4 = [];
+		var yearmap = {};
+		
+		data.forEach(function (ds) {
+			ds.total.forEach(function (item) {
+				if (!yearmap.hasOwnProperty(item[0])) {
+					yearmap[item[0]] = item[0];
+				}
+			});
+		});
+		var years = Object.keys(yearmap).sort();
+		console.log(years);
+		data.forEach(function (ds) {
+			var t1row = {};
+			var t2row = {};
+			var t3row = {};
+			var t4row = {};
+			var t1cels = [];
+			var t2cels = [];
+			var t3cels = [];
+			var t4cels = [];
+			t1cels.push(ds.campus);
+			t2cels.push(ds.campus);
+			t3cels.push(ds.campus);
+			t4cels.push(ds.campus);
+			var t1series = ds.gap;
+			t1series.forEach(function (item) {
+				t1row[item[0]] = item[1];
+			});
+			var t2series = ds.gradrate;
+			t2series.forEach(function (item) {
+				t2row[item[0]] = item[1];
+			});
+			var t3series = ds.pell;
+			t3series.forEach(function (item) {
+				t3row[item[0]] = item[1];
+			});
+			var t4series = ds.total;
+			t4series.forEach(function (item) {
+				t4row[item[0]] = item[1];
+			});
+			years.forEach(function (yr) {
+				if (t1row.hasOwnProperty(yr)) {
+					t1cels.push(t1row[yr]);
+				} else {
+					t1cels.push('na');
+				}
+				if (t2row.hasOwnProperty(yr)) {
+					t2cels.push(t2row[yr]);
+				} else {
+					t2cels.push('na');
+				}
+				if (t3row.hasOwnProperty(yr)) {
+					t3cels.push(t3row[yr]);
+				} else {
+					t3cels.push('na');
+				}
+				if (t4row.hasOwnProperty(yr)) {
+					t4cels.push(t4row[yr]);
+				} else {
+					t4cels.push('na');
+				}
+			});
+			table1.push( '<tr><td>' + t1cels.join('</td><td>') + '</td></tr>');
+			table2.push( '<tr><td>' + t2cels.join('</td><td>') + '</td></tr>');
+			table3.push( '<tr><td>' + t3cels.join('</td><td>') + '</td></tr>');
+			table4.push( '<tr><td>' + t4cels.join('</td><td>') + '</td></tr>');
+		});
+		var table1_html = '<table><thead><tr><th>Campus</th><th>';
+		table1_html += years.join('</th><th>');
+		table1_html += '</th></tr></thead><tbody>' + table1.join('') + '</tbody></table>';
+		
+		var table2_html = '<table><thead><tr><th>Campus</th><th>';
+		table2_html += years.join('</th><th>');
+		table2_html += '</th></tr></thead><tbody>' + table2.join('') + '</tbody></table>';
+		
+		var table3_html = '<table><thead><tr><th>Campus</th><th>';
+		table3_html += years.join('</th><th>');
+		table3_html += '</th></tr></thead><tbody>' + table3.join('') + '</tbody></table>';
+		
+		var table4_html = '<table><thead><tr><th>Campus</th><th>';
+		table4_html += years.join('</th><th>');
+		table4_html += '</th></tr></thead><tbody>' + table4.join('') + '</tbody></table>';
+		
+		
+		$('#bublin_table1').html(table1_html);
+		$('#bublin_table2').html(table2_html);
+		$('#bublin_table3').html(table3_html);
+		$('#bublin_table4').html(table4_html);
+	};
+
 	var load_data = function (config, callback) {
 		$.ajax({
 			url: cs.data_url,
@@ -637,6 +734,7 @@
 			});
 			multiseries.push({'name': 'all', 'id': 'gray', 'data': null_series, 'color': 'transparent'});
 			create_chart(config, multiseries.concat(multigray));
+			create_tables(config, data);
 			if (callback) {
 				window.setTimeout(function () {callback();}, 0);
 			}
