@@ -80,6 +80,8 @@
 	var svg;
 	var floaters = {};
 	var series_state;
+	var ctrl_values = ['ftf', '4yr'];
+
 
 	// use jquery to make an absolute positioned element draggable (repositionable)
 	// Usage: $('#some-selector').draggable(callback) where callback function receives delta-x and delta-y as arguments
@@ -778,6 +780,78 @@
 		update_chart(config, callback); // get selected
 	};
 
+	var reconfig = function (ctrl_values) {
+		var map = {"tr": {"2yr": "tr_2yr", "4yr": "tr_4yr"}, "ftf": {"4yr": "ftf_4yr", "6yr": "ftf_6yr"}};
+		switch (map[ctrl_values[0]][ctrl_values[1]]) {
+			case 'tr_2yr':
+				cs.data_url = cs.data_url_tr_2yr;
+				cs.dimension_map = cs.dimension_map_tr_2yr;
+				cs.year_start = cs.year_start_tr_2yr;
+				cs.year_end = cs.year_end_tr_2yr;
+				cs.chart_title = cs.chart_title_tr_2yr;
+				cs.chart_subtitle = cs.chart_subtitle_tr_2yr;
+			break;
+			case 'tr_4yr':
+				cs.data_url = cs.data_url_tr_4yr;
+				cs.dimension_map = cs.dimension_map_tr_4yr;
+				cs.year_start = cs.year_start_tr_4yr;
+				cs.year_end = cs.year_end_tr_4yr;
+				cs.chart_title = cs.chart_title_tr_4yr;
+				cs.chart_subtitle = cs.chart_subtitle_tr_4yr;
+			break;
+			case 'ftf_4yr':
+				cs.data_url = cs.data_url_ftf_4yr;
+				cs.dimension_map = cs.dimension_map_ftf_4yr;
+				cs.year_start = cs.year_start_ftf_4yr;
+				cs.year_end = cs.year_end_ftf_4yr;
+				cs.chart_title = cs.chart_title_ftf_4yr;
+				cs.chart_subtitle = cs.chart_subtitle_ftf_4yr;
+			break;
+			case 'ftf_6yr':
+				cs.data_url = cs.data_url_ftf_6yr;
+				cs.dimension_map = cs.dimension_map_ftf_6yr;
+				cs.year_start = cs.year_start_ftf_6yr;
+				cs.year_end = cs.year_end_ftf_6yr;
+				cs.chart_title = cs.chart_title_ftf_6yr;
+				cs.chart_subtitle = cs.chart_subtitle_ftf_6yr;
+			break;
+			default: // 'ftf_6yr'
+				cs.data_url = cs.data_url_ftf_6yr;
+				cs.dimension_map = cs.dimension_map_ftf_6yr;
+				cs.year_start = cs.year_start_ftf_6yr;
+				cs.year_end = cs.year_end_ftf_6yr;
+				cs.chart_title = cs.chart_title_ftf_6yr;
+				cs.chart_subtitle = cs.chart_subtitle_ftf_6yr;
+		}
+	};
+
+	var populate_filter2 = function (filter1_value) {
+		var options = [];
+		var option_tpl = '<option value="{val}"{sel}>{text}</option>';
+		if (filter1_value === 'tr') {
+			options.push(option_tpl.replace('{val}', '2yr')
+				.replace('{text}', '2-Year and 2.5-Year Graduation Rates')
+				.replace('{sel}', '')
+			);
+			options.push(option_tpl.replace('{val}', '4yr')
+				.replace('{text}', '4-Year and 4.5-Year Graduation Rates')
+				.replace('{sel}', ' selected')
+			);
+		} else {
+			options.push(option_tpl.replace('{val}', '4yr')
+				.replace('{text}', '4-Year and 4.5-Year Graduation Rates')
+				.replace('{sel}', '')
+			);
+			options.push(option_tpl.replace('{val}', '6yr')
+				.replace('{text}', '6-Year and 6.5-Year Graduation Rates')
+				.replace('{sel}', ' selected')
+			);
+		}
+		var filter2_html = options.join('');
+		$('#dataset_filter2').html(filter2_html);
+		return filter1_value === 'tr' ? '4yr' : '6yr';
+	};
+
 	$(document).ready(function () {
 		cs.campuses['Long Beach'].selected = true; // set default campus
 		init_trends_chart(function () {
@@ -801,47 +875,11 @@
 		});
 
 		$('#dataset_filter1').on('change', function (e) {
-			switch (e.target.value) {
-				case 'tr_2yr':
-					cs.data_url = cs.data_url_tr_2yr;
-					cs.dimension_map = cs.dimension_map_tr_2yr;
-					cs.year_start = cs.year_start_tr_2yr;
-					cs.year_end = cs.year_end_tr_2yr;
-					cs.chart_title = cs.chart_title_tr_2yr;
-					cs.chart_subtitle = cs.chart_subtitle_tr_2yr;
-				break;
-				case 'tr_4yr':
-					cs.data_url = cs.data_url_tr_4yr;
-					cs.dimension_map = cs.dimension_map_tr_4yr;
-					cs.year_start = cs.year_start_tr_4yr;
-					cs.year_end = cs.year_end_tr_4yr;
-					cs.chart_title = cs.chart_title_tr_4yr;
-					cs.chart_subtitle = cs.chart_subtitle_tr_4yr;
-				break;
-				case 'ftf_4yr':
-					cs.data_url = cs.data_url_ftf_4yr;
-					cs.dimension_map = cs.dimension_map_ftf_4yr;
-					cs.year_start = cs.year_start_ftf_4yr;
-					cs.year_end = cs.year_end_ftf_4yr;
-					cs.chart_title = cs.chart_title_ftf_4yr;
-					cs.chart_subtitle = cs.chart_subtitle_ftf_4yr;
-				break;
-				case 'ftf_6yr':
-					cs.data_url = cs.data_url_ftf_6yr;
-					cs.dimension_map = cs.dimension_map_ftf_6yr;
-					cs.year_start = cs.year_start_ftf_6yr;
-					cs.year_end = cs.year_end_ftf_6yr;
-					cs.chart_title = cs.chart_title_ftf_6yr;
-					cs.chart_subtitle = cs.chart_subtitle_ftf_6yr;
-				break;
-				default: // 'ftf_6yr'
-					cs.data_url = cs.data_url_ftf_6yr;
-					cs.dimension_map = cs.dimension_map_ftf_6yr;
-					cs.year_start = cs.year_start_ftf_6yr;
-					cs.year_end = cs.year_end_ftf_6yr;
-					cs.chart_title = cs.chart_title_ftf_6yr;
-					cs.chart_subtitle = cs.chart_subtitle_ftf_6yr;
-			}
+			ctrl_values[0] = e.target.value;
+			ctrl_values[1] = populate_filter2(ctrl_values[0]);
+			
+			reconfig(ctrl_values);
+
 			if (tabid === 'chart') {
 				$('#chart1').hide();
 				init_bubble(function () {});
@@ -853,6 +891,24 @@
 				}
 			}
 		});
+
+		$('#dataset_filter2').on('change', function (e) {
+			ctrl_values[1] = e.target.value;
+			
+			reconfig(ctrl_values);
+
+			if (tabid === 'chart') {
+				$('#chart1').hide();
+				init_bubble(function () {});
+				$('#chart1').show();
+			} else if (tabid === 'trends' || tabid === 'table') {
+				update_chart(config); // get selected
+				if ($('#chart0').highcharts()) {
+					$('#chart0').highcharts().reflow();
+				}
+			}
+		});
+		populate_filter2('ftf');
 	});
 	$('.nav-tabs a').click(function (e) {
 		e.preventDefault();
