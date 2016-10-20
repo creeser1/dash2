@@ -24,7 +24,8 @@ dl {
 }
 dl div {
 	float:left;
-	height:200px;
+	height:220px;
+	border:1px solid #ccc;
 }
 dd {
 	display:block;
