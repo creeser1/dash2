@@ -14,11 +14,11 @@
 		radius: 30,
 		scale: {'x': 0, 'y': 0, 'radius': 0, 'color': 0},
 		fmt_percent: d3.format('.0%'),
-		label: {'gradrate': 'Graduation Rate', 'gap': 'Achievement Gap', 'year': '2000', 'pell': 'Pell'},
+		label: {'gradrate': 'Graduation Rate', 'gap': 'URM Achievement Gap', 'year': '2000', 'pell': 'Pell'},
 		year_start: 2000,
 		year_end: 2009,
 		chart_title: 'First Time Freshman',
-		chart_subtitle: '6yr Grad Rate',
+		chart_subtitle: '6-Year Graduation Rate',
 		data_url: '/data/bublin_campus_6yr_ftf.json',
 		data_url_ftf_6yr: '/data/bublin_campus_6yr_ftf.json',
 		data_url_ftf_4yr: '/data/bublin_campus_4yr_ftf.json',
@@ -33,13 +33,13 @@
 		year_start_tr_2yr: 2000,
 		year_end_tr_2yr: 2013,
 		chart_title_ftf_6yr: 'First Time Freshman',
-		chart_subtitle_ftf_6yr: '6yr Grad Rate',
-		chart_title_tr_4yr: 'Transfer',
-		chart_subtitle_tr_4yr: '4yr Grad Rate',
+		chart_subtitle_ftf_6yr: '6-Year Graduation Rate',
+		chart_title_tr_4yr: 'Transfer Students',
+		chart_subtitle_tr_4yr: '4-Year Graduation Rate',
 		chart_title_ftf_4yr: 'First Time Freshman',
-		chart_subtitle_ftf_4yr: '4yr Grad Rate',
-		chart_title_tr_2yr: 'Transfer',
-		chart_subtitle_tr_2yr: '2yr Grad Rate',
+		chart_subtitle_ftf_4yr: '4-Year Graduation Rate',
+		chart_title_tr_2yr: 'Transfer Students',
+		chart_subtitle_tr_2yr: '2-Year Graduation Rate',
 		duration: 12000,
 		templates: {
 			tooltip: 'Achievement Gap:\u00A0\u00A0{gap}%\nGraduation Rate:\u00A0\u00A0{gradrate}%\nTotal FTF Freshmen:\u00A0\u00A0{ftf}\nPercent Pell:\u00A0\u00A0{pell}%\n'
@@ -525,12 +525,17 @@
 				height: 550
 			},
 			title: {
-				text: cs.chart_title
+				text: cs.chart_title,
+				style: {"color": "#777", "fontSize": "20px", "fontWeight": "600", "fontFamily": "sans-serif", "padding-bottom": "10px"}
 			},
 			subtitle: {
-				text: cs.chart_subtitle
+				text: cs.chart_subtitle,
+				style: {"color": "#777", "fontSize": "16px", "fontWeight": "600", "fontFamily": "sans-serif"}
 			},
 			xAxis: {
+				title: {
+					text: 'Cohort Year'
+				},
 				type: 'category',
 				labels: {
 					style: {
@@ -769,7 +774,7 @@
 	};
 
 	var init_trends_chart = function (callback) {
-		config = {axis_y_title: '% Achievement Gap', tooltip_label: 'Gap'};
+		config = {axis_y_title: 'URM Achievement Gap (%)', tooltip_label: 'Gap'};
 		update_chart(config, callback); // get selected
 	};
 
@@ -790,8 +795,8 @@
 		$('#yvalue_selector').on('change', function (e) {
 			var value = e.target.value;
 			cs.yvalue = {'gap':'gap', 'pell':'pell', 'gradrate':'gradrate'}[value];
-			config.axis_y_title = {'gap': '% Achievement Gap', 'pell': '% Pell Eligible Enrollment', 'gradrate': '% 6-Year Grad Rate'}[value];
-			config.tooltip_label = {'gap': 'Gap', 'pell': 'Pell Enrollment', 'gradrate': 'Grad Rate'}[value];
+			config.axis_y_title = {'gap': 'URM Achievement Gap (%)', 'pell': 'Pell Recipient Enrollment (%)', 'gradrate': 'Graduation Rate (%)'}[value];
+			config.tooltip_label = {'gap': 'URM Gap', 'pell': 'Pell Enrollment', 'gradrate': 'Grad Rate'}[value];
 			update_chart(config);
 		});
 
