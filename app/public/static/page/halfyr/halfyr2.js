@@ -216,7 +216,7 @@
 	};
 	
 	var init = function () {
-		var config = {'data_url': '/data/nearhalf_gradrates.json', 'campus': '*CSU System', 'type': 'tr', 'period': '2yr'};
+		var config = {'data_url': '/data/nearhalf_gradrates.json', 'campus': '*CSU System', 'type': 'ftf', 'period': '4yr'};
 		$('#dataset_filter1').on('change', function (e) {
 			config.campus = e.target.value;
 			load_data(config, function (result) {
