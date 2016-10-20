@@ -39,7 +39,7 @@ $app->get('/dashboard/{id}', function ($request, $response, $args) {
 	'csu-comparisons' => '1',
 	'csu-peer-benchmarking' => '2',
 	'what-paths-do-they-follow' => '144',
-	'near-half-year-gradrates' => '174',
+	'additional-term-gradrates' => '174',
 	'bottleneck-courses' => '179',
 	'faculty-matter' => '184'
 	];
@@ -71,7 +71,7 @@ $app->get('/edit/{id}', function ($request, $response, $args) {
 	'csu-comparisons' => '1',
 	'csu-peer-benchmarking' => '2',
 	'what-paths-do-they-follow' => '144',
-	'near-half-year-gradrates' => '174',
+	'additional-term-gradrates' => '174',
 	'bottleneck-courses' => '179',
 	'faculty-matter' => '184'
 	];
