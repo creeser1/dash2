@@ -152,15 +152,115 @@
 		return output;
 	};
 	
+	var transform_table_data = function (config, data) {
+		var output = [];
+		var years = Object.keys(data);
+		var outrow;
+		years.forEach(function (yr) {
+			var row = data[yr];
+			if (config.type === 'tr') {
+				if (config.period === '2yr') {
+					outrow = {
+						"coyear": yr,
+						"xyear": row[0][3],
+						"xaddterm": row[0][4],
+						"ndif": row[0][0],
+						"nyear": row[0][1],
+						"nadd": row[0][2]
+					};
+				} else if (config.period === '3yr') {
+					outrow = {
+						"coyear": yr,
+						"xyear": row[1][3],
+						"xaddterm": row[1][4],
+						"ndif": row[1][0],
+						"nyear": row[1][1],
+						"nadd": row[1][2]
+					};
+				} else if (config.period === '4yr') {
+					outrow = {
+						"coyear": yr,
+						"xyear": row[2][3],
+						"xaddterm": row[2][4],
+						"ndif": row[2][0],
+						"nyear": row[2][1],
+						"nadd": row[2][2]
+					};
+				}
+			} else {
+				if (config.period === '4yr') {
+					outrow = {
+						"coyear": yr,
+						"xyear": row[2][3],
+						"xaddterm": row[2][4],
+						"ndif": row[2][0],
+						"nyear": row[2][1],
+						"nadd": row[2][2]
+					};
+				} else if (config.period === '5yr') {
+					outrow = {
+						"coyear": yr,
+						"xyear": row[3][3],
+						"xaddterm": row[3][4],
+						"ndif": row[3][0],
+						"nyear": row[3][1],
+						"nadd": row[3][2]
+					};
+				} else if (config.period === '6yr') {
+					outrow = {
+						"coyear": yr,
+						"xyear": row[4][3],
+						"xaddterm": row[4][4],
+						"ndif": row[4][0],
+						"nyear": row[4][1],
+						"nadd": row[4][2]
+					};
+				}
+			}
+			output.push(outrow);
+		});
+		//console.log(JSON.stringify(output));
+		return output;
+	};
+
+	var build_table = function (cs, data) {
+		var row_tpl = '\n\n<tr><td>{coyear}</td><td>{xyear}</td><td>{xaddterm}</td><td>{nyear}</td><td>{ndif}</td><td>{nadd}</td></tr>';
+		var rows = [];		
+		rows.push('<table class="data1">');
+		rows.push('<thead><tr><th>Cohort</th><th>Spring</th><th>Additional</th><th>Spring</th><th>Additional</th><th>Total</th></tr></thead><tbody>');
+		var selection = transform_table_data(cs, data);
+		selection.forEach(function (row) {
+			rows.push(
+				row_tpl.replace('{coyear}', row.coyear)
+					.replace('{xyear}', Math.round(row.xyear) + '%')
+					.replace('{xaddterm}', Math.round(row.xaddterm) + '%')
+					.replace('{nyear}', row.nyear)
+					.replace('{ndif}', row.ndif)
+					.replace('{nadd}', row.nadd)
+			);
+		});
+
+		rows.push('</tbody></table>');
+		//console.log(JSON.stringify(rows));
+		return rows.join('');
+	};
+
+	var create_table = function (config, data) {
+		//var container = config.tablecontainer;
+		//console.log(data);
+		$('#nearterm_table').html(data);
+	};
+
 	var get_campus_data = function (config, callback) {
 		load_data(config, function (result) {
 			var selection = result[config.campus][config.type];
-			var output = transform_data(config, selection);
+			var output0 = transform_data(config, selection);
 			//var test_output = [
 			//	{"name": "2 Year Grad Rate", "color": "#37a", "data": [{"name": "2000", "y": 22.0}, {"name": "2001", "y": 22.0}, {"name": "2002", "y":  22.3}, {"name": "2003", "y":   23.4}, {"name": "2004", "y":  25.0}, {"name": "2005", "y":  24.1}, {"name": "2006", "y":  24.1}, {"name": "2007", "y":  23.1}, {"name": "2008", "y":  23.7}, {"name": "2009", "y":  24.8}, {"name": "2010", "y":  27.8}, {"name": "2011", "y":  26.8}, {"name": "2012", "y":  28.4}]},
 			//	{"name": "2.5 Year Grad Rate", "color": "#7a3", "data": [{"name": "2000", "y": 33.0}, {"name": "2001", "y": 32.7}, {"name": "2002", "y":  33.6}, {"name": "2003", "y":  34.9}, {"name": "2004", "y":  36.0}, {"name": "2005", "y":  35.7}, {"name": "2006", "y":  35.5}, {"name": "2007", "y":  34.2}, {"name": "2008", "y":  35.6}, {"name": "2009", "y":  37.0}, {"name": "2010", "y":  41.0}, {"name": "2011", "y":  40.3}, {"name": "2012", "y":  41.9}]},
 			//];
-			callback(config, output);
+			var output1 = build_table(config, selection);
+			callback(config, [output0, output1]);
 		});
 	};
 
@@ -201,14 +301,15 @@
 	};
 	
 	var init = function () {
-		var config = {'data_url': '/data/nearhalf_gradrates.json', 'campus': '*CSU System', 'type': 'ftf', 'period': '4yr'};
+		var config = {'data_url': '../data/nearhalf_gradrates.json', 'campus': '*CSU System', 'type': 'ftf', 'period': '4yr'};
 		$('#dataset_filter1').on('change', function (e) {
 			config.campus = e.target.value;
 			load_data(config, function (result) {
 				populate_filter3(config, result);
 			});
 			get_campus_data(config, function (config, data) {
-				create_chart(config, data);
+				create_chart(config, data[0]);
+				create_table(config, data[1]);
 			});
 		});
 		$('#dataset_filter2').on('change', function (e) {
@@ -217,19 +318,22 @@
 				populate_filter3(config, result);
 			});
 			get_campus_data(config, function (config, data) {
-				create_chart(config, data);
+				create_chart(config, data[0]);
+				create_table(config, data[1]);
 			});
 		});
 		$('#dataset_filter3').on('change', function (e) {
 			config.period = e.target.value;
 			get_campus_data(config, function (config, data) {
-				create_chart(config, data);
+				create_chart(config, data[0]);
+				create_table(config, data[1]);
 			});
 		});
 		load_data(config, function (result) {
 			populate_filter3(config, result);
 			get_campus_data(config, function (config, data) {
-				create_chart(config, data);
+				create_chart(config, data[0]);
+				create_table(config, data[1]);
 			});
 		});
 
