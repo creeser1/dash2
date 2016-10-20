@@ -224,10 +224,23 @@
 	};
 
 	var build_table = function (cs, data) {
-		var row_tpl = '\n\n<tr><td>{coyear}</td><td>{xyear}</td><td>{xaddterm}</td><td>{nyear}</td><td>{ndif}</td><td>{nadd}</td></tr>';
+		var map = {
+			'2yr': ['2-Year', '2.5-Year', '2-Year Count(N)', '2.5-Year Count(N)'],
+			'3yr': ['3-Year', '3.5-Year', '3-Year Count(N)', '3.5-Year Count(N)'],
+			'4yr': ['4-Year', '4.5-Year', '4-Year Count(N)', '4.5-Year Count(N)'],
+			'5yr': ['5-Year', '5.5-Year', '5-Year Count(N)', '5.5-Year Count(N)'],
+			'6yr': ['6-Year', '6.5-Year', '6-Year Count(N)', '6.5-Year Count(N)'],
+		};
+		var h = map[cs.period];
+		var row_tpl = '\n\n<tr><td>{coyear}</td><td>{xyear}</td><td>{xaddterm}</td><td>{nyear}</td><td>{nadd}</td><td>{ndif}</td></tr>';
 		var rows = [];		
 		rows.push('<table class="data1">');
-		rows.push('<thead><tr><th>Cohort</th><th>Spring</th><th>Additional</th><th>Spring</th><th>Additional</th><th>Total</th></tr></thead><tbody>');
+		var head_tpl = '<thead><tr><th>Cohort</th><th>{h0}</th><th>{h1}</th><th>{h2}</th><th>{h3}</th><th>Difference</th></tr></thead><tbody>';
+		rows.push(head_tpl.replace('{h0}', h[0])
+			.replace('{h1}', h[1])
+			.replace('{h2}', h[2])
+			.replace('{h3}', h[3])
+		);
 		var selection = transform_table_data(cs, data);
 		selection.forEach(function (row) {
 			rows.push(
