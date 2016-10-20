@@ -157,7 +157,7 @@
 		var years = Object.keys(data).sort();
 		var ultimate_year = years.slice(-1)[0];
 		var penultimate_year = years.slice(-2,-1)[0];
-		console.log(JSON.stringify([ultimate_year, penultimate_year]));
+		//console.log(JSON.stringify([ultimate_year, penultimate_year]));
 		var outrow;
 		years.forEach(function (yr) {
 			var row = data[yr];
