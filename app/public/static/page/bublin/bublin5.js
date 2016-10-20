@@ -566,8 +566,8 @@
 	};
 
 	var create_tables = function (config, data) {
-		console.log(JSON.stringify(config));
-		console.log(JSON.stringify(data));
+		//console.log(JSON.stringify(config));
+		//console.log(JSON.stringify(data));
 		var table1 = [];
 		var table2 = [];
 		var table3 = [];
@@ -582,7 +582,7 @@
 			});
 		});
 		var years = Object.keys(yearmap).sort();
-		console.log(years);
+		//console.log(years);
 		data.forEach(function (ds) {
 			var t1row = {};
 			var t2row = {};
@@ -841,7 +841,7 @@
 				$('#chart1').hide();
 				init_bubble(function () {});
 				$('#chart1').show();
-			} else if (tabid === 'trends') {
+			} else if (tabid === 'trends' || tabid === 'table') {
 				update_chart(config); // get selected
 				if ($('#chart0').highcharts()) {
 					$('#chart0').highcharts().reflow();
