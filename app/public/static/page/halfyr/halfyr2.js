@@ -154,7 +154,10 @@
 	
 	var transform_table_data = function (config, data) {
 		var output = [];
-		var years = Object.keys(data);
+		var years = Object.keys(data).sort();
+		var ultimate_year = years.slice(-1)[0];
+		var penultimate_year = years.slice(-2,-1)[0];
+		console.log(JSON.stringify([ultimate_year, penultimate_year]));
 		var outrow;
 		years.forEach(function (yr) {
 			var row = data[yr];
@@ -168,6 +171,7 @@
 						"nyear": row[0][1],
 						"nadd": row[0][2]
 					};
+					output.push(outrow);
 				} else if (config.period === '3yr') {
 					outrow = {
 						"coyear": yr,
@@ -177,6 +181,9 @@
 						"nyear": row[1][1],
 						"nadd": row[1][2]
 					};
+					if (yr < ultimate_year) {
+						output.push(outrow);
+					}
 				} else if (config.period === '4yr') {
 					outrow = {
 						"coyear": yr,
@@ -186,6 +193,9 @@
 						"nyear": row[2][1],
 						"nadd": row[2][2]
 					};
+					if (yr < penultimate_year) {
+						output.push(outrow);
+					}
 				}
 			} else {
 				if (config.period === '4yr') {
@@ -197,6 +207,7 @@
 						"nyear": row[2][1],
 						"nadd": row[2][2]
 					};
+					output.push(outrow);
 				} else if (config.period === '5yr') {
 					outrow = {
 						"coyear": yr,
@@ -206,6 +217,9 @@
 						"nyear": row[3][1],
 						"nadd": row[3][2]
 					};
+					if (yr < ultimate_year) {
+						output.push(outrow);
+					}
 				} else if (config.period === '6yr') {
 					outrow = {
 						"coyear": yr,
@@ -215,9 +229,11 @@
 						"nyear": row[4][1],
 						"nadd": row[4][2]
 					};
+					if (yr < penultimate_year) {
+						output.push(outrow);
+					}
 				}
 			}
-			output.push(outrow);
 		});
 		//console.log(JSON.stringify(output));
 		return output;
