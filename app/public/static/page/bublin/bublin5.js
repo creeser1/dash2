@@ -830,20 +830,20 @@
 		var option_tpl = '<option value="{val}"{sel}>{text}</option>';
 		if (filter1_value === 'tr') {
 			options.push(option_tpl.replace('{val}', '2yr')
-				.replace('{text}', '2-Year and 2.5-Year Graduation Rates')
+				.replace('{text}', '2-Year Graduation Rates')
 				.replace('{sel}', '')
 			);
 			options.push(option_tpl.replace('{val}', '4yr')
-				.replace('{text}', '4-Year and 4.5-Year Graduation Rates')
+				.replace('{text}', '4-Year Graduation Rates')
 				.replace('{sel}', ' selected')
 			);
 		} else {
 			options.push(option_tpl.replace('{val}', '4yr')
-				.replace('{text}', '4-Year and 4.5-Year Graduation Rates')
+				.replace('{text}', '4-Year Graduation Rates')
 				.replace('{sel}', '')
 			);
 			options.push(option_tpl.replace('{val}', '6yr')
-				.replace('{text}', '6-Year and 6.5-Year Graduation Rates')
+				.replace('{text}', '6-Year Graduation Rates')
 				.replace('{sel}', ' selected')
 			);
 		}
