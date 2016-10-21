@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 23, 2016 at 07:55 AM
+-- Generation Time: Oct 21, 2016 at 07:38 AM
 -- Server version: 5.7.14
 -- PHP Version: 7.0.10
 
@@ -43,8 +43,9 @@ CREATE TABLE `pguser` (
 --
 
 INSERT INTO `pguser` (`id`, `username`, `hash`, `salt`, `expires`, `role`, `status`, `created`, `modified`) VALUES
-(28, 'chris', '$2y$10$mx19ici1y/gTbCqqJ5tgwepGWklI.EFUVGsnUGdaJiR3SXIXu9SGa', '$2y$10$igUwLv1Cx549A93M.ExYrORtDp9CWmr1Za1tZrlFGuA6P66AbQcMi', '2016-09-21 17:00:16', 'admin', 1, '2016-09-19 17:44:48', '2016-09-21 16:00:16'),
-(26, 'roy', '$2y$10$Re3ogjPxewCIREzMdGpi0OPgFaVkPRBFlnpu21/xsrCrrC7u2atv6', '$2y$10$tHf7H/CMlgNkIcrRxuFsOudvhiFQTJpgmtUoUOeNUh0JT9tLZiXU.', '2016-09-17 00:19:47', 'editor', 1, '2016-09-16 20:51:18', '2016-09-16 23:19:47');
+(28, 'chris', '$2y$10$mx19ici1y/gTbCqqJ5tgwepGWklI.EFUVGsnUGdaJiR3SXIXu9SGa', '$2y$10$9ZZcliGAvJfyhcIIaWPA5OmwycSZtywURhp/1WQViN7WaiWMrR48a', '2016-10-18 16:32:51', 'admin', 1, '2016-09-19 17:44:48', '2016-10-18 15:32:51'),
+(29, 'roy', '$2y$10$f7EmLuM9Kt.rP.9c.UN.9u0kBln6wQ03m5mnaBfTBCYTFbk1TwBjS', '$2y$10$tJZkvYauh6wOmgWczgvHvekmYH.n2PquqinkkH.zJfuHbDlHpXK3e', '2016-10-20 21:28:59', 'editor', 1, '2016-10-20 16:54:32', '2016-10-20 20:28:59'),
+(30, 'erin', '$2y$10$KULLUOYwoRk1JGmRQtMbBOPUKZ1ocgfKSl29RcupX1jYkijj06mBa', '$2y$10$r.yADrsEuL/qpKLzGktviOLuvDCRxHcblzdteQkFSvbzFSLmrfwC6', '2016-10-20 17:59:30', 'editor', 1, '2016-10-20 16:59:03', '2016-10-20 16:59:30');
 
 --
 -- Indexes for dumped tables
@@ -65,7 +66,7 @@ ALTER TABLE `pguser`
 -- AUTO_INCREMENT for table `pguser`
 --
 ALTER TABLE `pguser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
