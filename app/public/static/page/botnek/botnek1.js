@@ -139,11 +139,11 @@
 			});
 			series.push({name: type, data: output});
 		});
-		console.log(JSON.stringify(top3));
+		//console.log(JSON.stringify(top3));
 		top3.sort(function (a, b) {return b[0] - a[0];});
 		top3 = top3.filter(function (el, i, a) {return i < 1 || el[1] !== a[i - 1][1]});
 		top3 = top3.slice(0, 3);
-		console.log(JSON.stringify(top3));
+		//console.log(JSON.stringify(top3));
 		top3.forEach(function (item, i) {
 			card[item[1]] = i + 1;
 		});
