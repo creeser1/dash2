@@ -139,11 +139,9 @@
 			});
 			series.push({name: type, data: output});
 		});
-		//console.log(JSON.stringify(top3));
 		top3.sort(function (a, b) {return b[0] - a[0];});
 		top3 = top3.filter(function (el, i, a) {return i < 1 || el[1] !== a[i - 1][1]});
 		top3 = top3.slice(0, 3);
-		//console.log(JSON.stringify(top3));
 		top3.forEach(function (item, i) {
 			card[item[1]] = i + 1;
 		});
@@ -186,17 +184,28 @@
 		};
 	}());
 	
-	var populate_filter4 = function (items) {
+	var populate_filter4 = function (config, items) {
 		var output = [];
 		items.forEach(function (el, i) {
 			var item = el[1];
 			var option_tpl = '<option value="{val}">{text}</option>';
 			if (i === 0) {
+				config.period = item;
 				option_tpl = '<option value="{val}" selected>{text}</option>';
 			}
 			output.push(option_tpl.replace('{val}', item).replace('{text}', item));
 		});
 		return output.join('');
+	};
+
+	var get_term = function (config, data) {
+		var term = -1;// = data.key1.indexOf(config.period);
+		data.key1.forEach(function (el, i) { // replace with indexed search
+			if (el[1] === config.period) {
+				term = i;
+			}
+		});
+		return term;
 	};
 
 	var init = function () {
@@ -214,8 +223,11 @@
 			config.major = e.target.value;
 			config.data_url = construct_data_url(config);
 			load_data(config, function (data, config) {
-				$('#dataset_filter4').html(populate_filter4(data.key1));
-				create_chart(config, select_data(data, '0', '0'));
+				$('#dataset_filter4').html(populate_filter4(config, data.key1));
+				var term = get_term(config, data);
+				if (term !== -1) {
+					create_chart(config, select_data(data, term));
+				}
 			});
 		});
 
@@ -223,22 +235,20 @@
 		$('#dataset_filter4').on('change', function (e) {
 			config.period = e.target.value;
 			load_data(config, function (data, config) {
-				var term;// = data.key1.indexOf(config.period);
-				data.key1.forEach(function (el, i) { // replace with indexed search
-					if (el[1] === config.period) {
-						term = i;
-					}
-				});
+				var term = get_term(config, data);
 				if (term !== -1) {
-					create_chart(config, select_data(data, term, '0'));
+					create_chart(config, select_data(data, term));
 				}
 			});
 		});
 
 		// use default state as page loads initially
 		load_data(config, function (data, config) {
-			$('#dataset_filter4').html(populate_filter4(data.key1));
-			create_chart(config, select_data(data, '0', '0'));
+			$('#dataset_filter4').html(populate_filter4(config, data.key1));
+			var term = get_term(config, data);
+			if (term !== -1) {
+				create_chart(config, select_data(data, term));
+			}
 		});
 	};
 	$(init());
