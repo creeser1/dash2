@@ -751,7 +751,7 @@
 	
 	var update_chart = function (config, callback) {
 		//console.log(JSON.stringify(config));
-		load_data(cs, function (data, cs) {
+		load_data(config, function (data, config) {
 			$('#chart0').off('click');
 			$('#chart0').on('click', function () { // listens for click on trends legend
 				update_series(1); // save legend selections to cs
@@ -766,7 +766,7 @@
 				var campus = campus_data.campus;
 				campus_data[attribute].forEach(function (item, i) {
 					var key = item[0]; // year
-					if (key <= cs.year_end && key >= cs.year_start) {
+					if (key <= config.year_end && key >= config.year_start) {
 						var value = item[1];
 						series.push({'name': key, 'y': value});
 						if (null_series.length < i) {
@@ -778,7 +778,7 @@
 				multigray.push({'name': campus, 'data': series.slice(), 'linkedTo': 'gray', 'color': '#dedede', 'zIndex': 1, 'lineWidth': 1});
 			});
 			multiseries.push({'name': 'all', 'id': 'gray', 'data': null_series, 'color': 'transparent'});
-			create_chart(cs, multiseries.concat(multigray));
+			create_chart(config, multiseries.concat(multigray));
 			create_tables(config, data);
 			if (callback) {
 				window.setTimeout(function () {callback();}, 0);
@@ -795,7 +795,7 @@
 			case 'table':
 			break;
 			case 'trends':
-				update_chart(config); // get selected
+				update_chart(cs); // get selected
 				if ($('#chart0').highcharts()) {
 					$('#chart0').highcharts().reflow();
 				}
@@ -908,9 +908,9 @@
 		$('#yvalue_selector').on('change', function (e) {
 			var value = e.target.value;
 			cs.yvalue = {'gap':'gap', 'pell':'pell', 'gradrate':'gradrate'}[value];
-			config.axis_y_title = {'gap': 'URM Achievement Gap (%)', 'pell': 'Pell Recipient Enrollment (%)', 'gradrate': 'Graduation Rate (%)'}[value];
-			config.tooltip_label = {'gap': 'URM Gap', 'pell': 'Pell Enrollment', 'gradrate': 'Grad Rate'}[value];
-			update_chart(config);
+			cs.axis_y_title = {'gap': 'URM Achievement Gap (%)', 'pell': 'Pell Recipient Enrollment (%)', 'gradrate': 'Graduation Rate (%)'}[value];
+			cs.tooltip_label = {'gap': 'URM Gap', 'pell': 'Pell Enrollment', 'gradrate': 'Grad Rate'}[value];
+			update_chart(cs);
 		});
 
 		$('#dataset_filter1').on('change', function (e) {
@@ -924,7 +924,7 @@
 				init_bubble(function () {});
 				$('#chart1').show();
 			} else if (tabid === 'trends' || tabid === 'table') {
-				update_chart(config); // get selected
+				update_chart(cs); // get selected
 				if ($('#chart0').highcharts()) {
 					$('#chart0').highcharts().reflow();
 				}
@@ -941,7 +941,7 @@
 				init_bubble(function () {});
 				$('#chart1').show();
 			} else if (tabid === 'trends' || tabid === 'table') {
-				update_chart(config); // get selected
+				update_chart(cs); // get selected
 				if ($('#chart0').highcharts()) {
 					$('#chart0').highcharts().reflow();
 				}
