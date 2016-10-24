@@ -63,46 +63,6 @@
 		});
 	};
 
-	var expand_data = function (obj) {
-		var out = [];
-		var data = obj.data;
-		var key1 = obj.key1;
-		var key2 = obj.key2;
-		var key3 = obj.key3;
-		var key4 = obj.key4;
-		Object.keys(data).forEach(function (ts) {
-			var termset = data[ts];
-			var ord = key1[ts][0];
-			var term = key1[ts][1];
-			Object.keys(termset).forEach(function (ct) {
-				var typeset = termset[ct];
-				var type = key2[ct][0];
-				Object.keys(typeset).forEach(function (cc) {
-					var coursecode = typeset[cc];
-					var code = key3[cc][0];
-					var title2 = key3[cc][1];
-					var title = code + ' : ' + title2;
-					var xz = key4[coursecode];
-					var x = xz[0];
-					var z = xz[1];
-					var big = {
-						"Year_Term": term,
-						"Course_Code": code,
-						"CourseTitle": title,
-						"CourseTitle2": title2,
-						"Course_Type": type,
-						"x": x,
-						"y": z/x,
-						"z": z,
-						"date_order": ord
-					};
-					out.push(big);
-				});
-			});
-		});
-		return out;
-	};
-
 	var get_term = function (config, data) {
 		var term = -1;// = data.key1.indexOf(config.period);
 		data.key1.forEach(function (el, i) { // replace with indexed search
