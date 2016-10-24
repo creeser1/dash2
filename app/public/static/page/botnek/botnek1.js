@@ -103,6 +103,16 @@
 		return out;
 	};
 
+	var get_term = function (config, data) {
+		var term = -1;// = data.key1.indexOf(config.period);
+		data.key1.forEach(function (el, i) { // replace with indexed search
+			if (el[1] === config.period) {
+				term = i;
+			}
+		});
+		return term;
+	};
+
 	var select_data = function (config, data) {
 		var term = get_term(config, data);
 		if (term === -1) {
@@ -200,16 +210,6 @@
 			output.push(option_tpl.replace('{val}', item).replace('{text}', item));
 		});
 		return output.join('');
-	};
-
-	var get_term = function (config, data) {
-		var term = -1;// = data.key1.indexOf(config.period);
-		data.key1.forEach(function (el, i) { // replace with indexed search
-			if (el[1] === config.period) {
-				term = i;
-			}
-		});
-		return term;
 	};
 
 	var init = function () {
