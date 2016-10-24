@@ -103,7 +103,11 @@
 		return out;
 	};
 
-	var select_data = function (data, term) {
+	var select_data = function (config, data) {
+		var term = get_term(config, data);
+		if (term === -1) {
+			return null;
+		}
 		var series = [];
 		var types = [];
 		var top3 = [];
@@ -224,10 +228,7 @@
 			config.data_url = construct_data_url(config);
 			load_data(config, function (data, config) {
 				$('#dataset_filter4').html(populate_filter4(config, data.key1));
-				var term = get_term(config, data);
-				if (term !== -1) {
-					create_chart(config, select_data(data, term));
-				}
+				create_chart(config, select_data(config, data));
 			});
 		});
 
@@ -235,20 +236,14 @@
 		$('#dataset_filter4').on('change', function (e) {
 			config.period = e.target.value;
 			load_data(config, function (data, config) {
-				var term = get_term(config, data);
-				if (term !== -1) {
-					create_chart(config, select_data(data, term));
-				}
+				create_chart(config, select_data(config, data));
 			});
 		});
 
 		// use default state as page loads initially
 		load_data(config, function (data, config) {
 			$('#dataset_filter4').html(populate_filter4(config, data.key1));
-			var term = get_term(config, data);
-			if (term !== -1) {
-				create_chart(config, select_data(data, term));
-			}
+			create_chart(config, select_data(config, data));
 		});
 	};
 	$(init());
