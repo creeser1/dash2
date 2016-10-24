@@ -278,21 +278,28 @@
 
 	var apply_selection = function () {
 		// sync legend
+		//console.log(JSON.stringify(['applyselection0']));
 		d3.selectAll('.legend').remove();
-		create_legend(svg, cs.retained_data); // recreate to apply font-weight to selected campuses
-		// sync dots
-		Object.keys(cs.campuses).forEach(function (el) {
-			if (cs.campuses[el].selected) {
-				d3.selectAll('#' + maketag(el)).style('opacity', 1).style('stroke-width', 1).style('stroke', '#111');
-			} else {
-				d3.selectAll('#' + maketag(el)).style('opacity', 0.2).style('stroke', 'none');
-			}
-			if (floaters.hasOwnProperty(el)) {
-				floaters[el][0][0].style.visibility = cs.campuses[el].selected ? 'visible' : 'hidden';
-			}
+		//console.log(JSON.stringify(['applyselection00']));
+		load_data(cs, function (data, cs) {
+			create_legend(svg, data); // recreate to apply font-weight to selected campuses
+			// sync dots
+			//console.log(JSON.stringify(['applyselection1']));
+			Object.keys(cs.campuses).forEach(function (el) {
+				if (cs.campuses[el].selected) {
+					d3.selectAll('#' + maketag(el)).style('opacity', 1).style('stroke-width', 1).style('stroke', '#111');
+				} else {
+					d3.selectAll('#' + maketag(el)).style('opacity', 0.2).style('stroke', 'none');
+				}
+				if (floaters.hasOwnProperty(el)) {
+					floaters[el][0][0].style.visibility = cs.campuses[el].selected ? 'visible' : 'hidden';
+				}
+			});
+			//console.log(JSON.stringify(['applyselection2']));
+			reposition();
+			//console.log(JSON.stringify(['applyselection3']));
+			update_series();
 		});
-		reposition();
-		update_series();
 	};
 
 	var plot_data = function (svg, data) {
@@ -418,7 +425,9 @@
 			svg.transition().duration(cs.duration);
 			displayYear($('#slider').val());
 		});
+		//console.log(JSON.stringify(['plotdata2',data]));
 		apply_selection();
+		//console.log(JSON.stringify(['plotdata3',data]));
 	};
 
 	var create_legend = function (svg, data) {
@@ -476,6 +485,32 @@
 		});
 	};
 
+	var load_data = (function () {
+		var datacache = {}; // in closure
+		return function (config, callback) {
+			//console.log(JSON.stringify(config));
+			if (datacache.hasOwnProperty(config.data_url)) {
+				callback(datacache[config.data_url], config);
+			} else {
+				$.ajax({
+					url: config.data_url,
+					datatype: "json",
+					success: function (result) {
+						var json_object = (typeof result === 'string')
+							? JSON.parse(result)
+							: result;
+						//console.log(JSON.stringify(config, json_object));
+						json_object.sort(function (a, b) {
+							return a.campus < b.campus ? -1 : a.campus > b.campus ? 1 : 0;
+						});
+						datacache[config.data_url] = json_object;
+						callback(json_object, config);
+					}
+				});
+			}
+		};
+	}());
+/*
 	//var retained_data;
 	var load_data = function (url, callback) {
 		if (cs.retained_data !== null) {
@@ -487,7 +522,7 @@
 			});
 		}
 	};
-
+*/
 	var init_bubble = function (callback) {
 		cs.scale.x = d3.scale.linear().domain(cs.dimension_map.x.slice(1)).range([0, cs.width]);
 		cs.scale.y = d3.scale.linear().domain(cs.dimension_map.y.slice(1)).range([cs.height, 0]);
@@ -496,7 +531,9 @@
 		// above function returns color mapped to campus, formerly d3.scale.category20()
 
 		// once the data is completely loaded, plot data points and generate legend
-		load_data(cs.data_url, function (data) {
+		//load_data(cs.data_url, function (data) {
+		//console.log(JSON.stringify(cs));
+		load_data(cs, function (data) {
 			$('#chart1-plotarea').empty(); // remove old svg before recreating at different size
 			svg = build_chart();
 			create_legend(svg, data);
@@ -668,7 +705,7 @@
 		$('#bublin_table3').html(table3_html);
 		$('#bublin_table4').html(table4_html);
 	};
-
+/*
 	var load_data = function (config, callback) {
 		$.ajax({
 			url: cs.data_url,
@@ -686,7 +723,7 @@
 			}
 		});
 	};
-
+*/
 	var update_series = function (mode) {
 		var pchart = $('#chart0').highcharts();
 		if (pchart) {
@@ -713,7 +750,8 @@
 	};
 	
 	var update_chart = function (config, callback) {
-		load_data(config, function (data, config) {
+		//console.log(JSON.stringify(config));
+		load_data(cs, function (data, cs) {
 			$('#chart0').off('click');
 			$('#chart0').on('click', function () { // listens for click on trends legend
 				update_series(1); // save legend selections to cs
@@ -740,7 +778,7 @@
 				multigray.push({'name': campus, 'data': series.slice(), 'linkedTo': 'gray', 'color': '#dedede', 'zIndex': 1, 'lineWidth': 1});
 			});
 			multiseries.push({'name': 'all', 'id': 'gray', 'data': null_series, 'color': 'transparent'});
-			create_chart(config, multiseries.concat(multigray));
+			create_chart(cs, multiseries.concat(multigray));
 			create_tables(config, data);
 			if (callback) {
 				window.setTimeout(function () {callback();}, 0);
@@ -775,8 +813,9 @@
 		}
 	};
 
-	var init_trends_chart = function (callback) {
-		config = {axis_y_title: 'URM Achievement Gap (%)', tooltip_label: 'Gap'};
+	var init_trends_chart = function (config, callback) {
+		config.axis_y_title = 'URM Achievement Gap (%)';
+		config.tooltip_label = 'Gap';
 		update_chart(config, callback); // get selected
 	};
 
@@ -854,7 +893,7 @@
 
 	$(document).ready(function () {
 		cs.campuses['Long Beach'].selected = true; // set default campus
-		init_trends_chart(function () {
+		init_trends_chart(cs, function () {
 			$('#chart1 .controls div').css('visibility', 'hidden');
 			$('#chart1 button').css('visibility', 'hidden');
 			$('#chart1').hide();
