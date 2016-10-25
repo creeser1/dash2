@@ -76,40 +76,67 @@
 		done: false
 	};
 	var tabid = 'chart';
-	var config;
+	//var config;
 	var svg;
+	var apply_selection;
 	var floaters = {};
 	var series_state;
 	var ctrl_values = ['ftf', '4yr'];
 
+	var load_data = (function () {
+		var datacache = {}; // in closure
+		return function (config, callback) {
+			if (datacache.hasOwnProperty(config.data_url)) {
+				callback(datacache[config.data_url], config);
+			} else {
+				$.ajax({
+					url: config.data_url,
+					datatype: "json",
+					success: function (result) {
+						var json_object = (typeof result === 'string')
+							? JSON.parse(result)
+							: result;
+						json_object.sort(function (a, b) {
+							return a.campus < b.campus ? -1 : a.campus > b.campus ? 1 : 0;
+						});
+						datacache[config.data_url] = json_object;
+						callback(json_object, config);
+					}
+				});
+			}
+		};
+	}());
 
 	// use jquery to make an absolute positioned element draggable (repositionable)
 	// Usage: $('#some-selector').draggable(callback) where callback function receives delta-x and delta-y as arguments
-	$.fn.draggable = function(callback){
+	$.fn.draggable = function (callback) {
 		var $this = this,
-		ns = 'draggable_'+(Math.random()+'').replace('.',''),
-		mm = 'mousemove.'+ns,
-		mu = 'mouseup.'+ns,
+		ns = 'draggable_' + (Math.random() + '').replace('.', ''),
+		mm = 'mousemove.' + ns,
+		mu = 'mouseup.' + ns,
 		$w = $(window),
 		isFixed = ($this.css('position') === 'fixed'),
-		adjX = 0, adjY = 0;
+		adjX = 0, 
+		adjY = 0;
 
 		$this.mousedown(function(ev){
-			var leftoffset = 40.0 + ($(window).width() - 1180)/2.0;
-			console.log($(window).width());
+			var leftoffset = 40.0 + ($(window).width() - 1180) / 2.0;
+			//console.log($(window).width());
 			var pos = $this.offset();
 			var xbeg = $this.css('left');
 			var ybeg = $this.css('top');
 			if (isFixed) {
-				adjX = $w.scrollLeft(); adjY = $w.scrollTop();
+				adjX = $w.scrollLeft();
+				adjY = $w.scrollTop();
 			}
 			var ox = (ev.pageX - pos.left + leftoffset), oy = (ev.pageY - pos.top + 363);
-			$this.data(ns,{ x : ox, y: oy });
+			$this.data(ns, {x : ox, y: oy});
 			$w.on(mm, function(ev){
 				ev.preventDefault();
 				ev.stopPropagation();
 				if (isFixed) {
-					adjX = $w.scrollLeft(); adjY = $w.scrollTop();
+					adjX = $w.scrollLeft();
+					adjY = $w.scrollTop();
 				}
 				var offset = $this.data(ns);
 				$this.css({left: ev.pageX - adjX - offset.x, top: ev.pageY - adjY - offset.y});
@@ -142,13 +169,12 @@
 
 	var maketag = function (campus) {
 		var tag = 'tag' + campus.replace(/\s+/g, '');
-		//console.log('making tab for ' + campus + ' ' + tag);
 		return tag;
 	};
 
 	var build_chart = function () {
 		// Create the SVG container and set the origin.
-		var svg = d3.select('#chart1-plotarea').append('svg')
+		var svg1 = d3.select('#chart1-plotarea').append('svg')
 			.attr('width', cs.width + cs.margin.left + cs.margin.right)
 			.attr('height', cs.height + cs.margin.top + cs.margin.bottom)
 			.append('g')
@@ -165,19 +191,19 @@
 		}).tickSize(-cs.width - 6);
 		
 		// Add the x-axis.
-		svg.append('g')
+		svg1.append('g')
 			.attr('class', 'x axis')
 			.attr('transform', 'translate(0,' + (cs.height + 6) + ')')
 			.call(xAxis);
 
 		// Add the y-axis.
-		svg.append('g')
+		svg1.append('g')
 			.attr('class', 'y axis')
 			.attr('transform', 'translate(-6, 0)')
 			.call(yAxis);
 
 		// Add an x-axis label.
-		svg.append('text')
+		svg1.append('text')
 			.attr('class', 'x label')
 			.attr('text-anchor', 'end')
 			.attr('x', cs.width)
@@ -185,7 +211,7 @@
 			.text(cs.label[cs.dimension_map.x[0]]);
 
 		// Add a y-axis label.
-		svg.append('text')
+		svg1.append('text')
 			.attr('class', 'y label')
 			.attr('text-anchor', 'end')
 			.attr('y', -52)
@@ -193,7 +219,7 @@
 			.attr('transform', 'rotate(-90)')
 			.text(cs.label[cs.dimension_map.y[0]]);
 
-		return svg;
+		return svg1;
 	};
 
 	var create_tooltip = function () {
@@ -276,15 +302,92 @@
 		.sort(order);
 	};
 
-	var apply_selection = function () {
+	var create_legend = function (svg, data) {
+		var legend = svg.selectAll('.legend')
+			.data(data)
+			.enter().append('g')
+			.attr('class', 'legend')
+			.attr('transform', function (d, i) { return 'translate(20,' + i * 17.7 + ')'; });
+
+		legend.append('rect')
+			.attr('class', 'legendrect')
+			.attr('x', cs.width)
+			.attr('width', 12)
+			.attr('height', 12)
+			.style('fill', function(d) { return cs.scale.color(xcolor(d)); });
+
+		legend.append('text')
+			.attr('x', cs.width + 16)
+			.attr('y', 5)
+			.attr('dy', 7)
+			.style('font-size', '13px').style('opacity', 1)
+			.style('font-weight', function (d) {return (cs.campuses[d.campus].selected ? '800' : '400');})
+			.text(function (d) { return d.campus; });
+
+		legend.on('mouseover', function (d) {
+			d3.selectAll('.legend')
+				.style('opacity', 0.7);
+			var _this = this;
+			d3.select(_this)
+				.style('opacity', 1);
+			d3.selectAll('.dot')
+				.style('opacity', function (d) {
+					return (cs.campuses[d.campus].selected
+						? 1
+						: 0.2);
+				});
+			
+			if (cs.campuses[d.campus].selected) { // indicate already selected with thicker stroke on legend campus mouseover
+				d3.select('#' + maketag(d.campus))
+					.style('stroke-width', 2).style('stroke', '#111');
+			}
+			d3.select('#' + maketag(d.campus))
+				.style('opacity', 1);
+		})
+		.on('click', function (d) {
+			cs.campuses[d.campus].selected = !cs.campuses[d.campus].selected; // perform toggle
+			apply_selection(); // apply to legend, dot style and dot order
+		})
+		.on('mouseout', function() {
+				d3.selectAll('.legend')
+					.style('opacity', 1);
+				d3.selectAll('.dot')
+					.style('opacity', 1);
+				apply_selection();
+		});
+	};
+
+	var update_series = function (mode) {
+		var pchart = $('#chart0').highcharts();
+		if (pchart) {
+			if (mode) { // save selected
+				pchart.series.forEach(function (e) {
+					var attributes = e.userOptions;
+					if (attributes.zIndex === 2) {
+						cs.campuses[attributes.name].selected = attributes.visible; // set selected
+					}
+				});
+			} else { // load selected
+				pchart.series.forEach(function (e) {
+					var attributes = e.userOptions;
+					var tf;
+					if (attributes.zIndex === 2) {
+						tf = (cs.campuses[attributes.name].selected || false); // get selected
+						series_state[attributes.name] = tf;
+						e.userOptions.visible = tf;
+					}
+				});
+			}
+		}
+		return series_state;
+	};
+	
+	apply_selection = function () {
 		// sync legend
-		//console.log(JSON.stringify(['applyselection0']));
 		d3.selectAll('.legend').remove();
-		//console.log(JSON.stringify(['applyselection00']));
 		load_data(cs, function (data, cs) {
 			create_legend(svg, data); // recreate to apply font-weight to selected campuses
 			// sync dots
-			//console.log(JSON.stringify(['applyselection1']));
 			Object.keys(cs.campuses).forEach(function (el) {
 				if (cs.campuses[el].selected) {
 					d3.selectAll('#' + maketag(el)).style('opacity', 1).style('stroke-width', 1).style('stroke', '#111');
@@ -295,14 +398,13 @@
 					floaters[el][0][0].style.visibility = cs.campuses[el].selected ? 'visible' : 'hidden';
 				}
 			});
-			//console.log(JSON.stringify(['applyselection2']));
 			reposition();
-			//console.log(JSON.stringify(['applyselection3']));
 			update_series();
 		});
 	};
 
 	var plot_data = function (svg, data) {
+		var dot;
 		$('.chart-title h1').text(cs.chart_title);
 		$('.chart-title h2').text(cs.chart_subtitle);
 		$('#slider').attr('min', cs.year_start);
@@ -316,35 +418,6 @@
 			.attr('y', cs.height - 35)
 			.attr('x', cs.width - 15)
 			.text(cs.label.year);
-
-		// Tweens the entire chart by first tweening the year, and then the data.
-		// For the interpolated data, the dots and label are redrawn.
-		var tweenYear = function () {
-			var year = d3.interpolateNumber(cs.year_start, cs.year_end);
-			return function(t) {
-				displayYear(year(t));
-			};
-		};
-
-		// Updates the display to show the specified year.
-		var displayYear = function (year) {
-			dot.data(interpolateData(year), key).call(position).sort(order);
-			label.text(Math.round(year));
-			$('#slider').val(Math.round(year));
-		};
-
-		// Interpolates the dataset for the given (fractional) year.
-		var interpolateData = function (year) {
-			return data.map(function (d) {
-				return {
-					campus: d.campus,
-					pell: interpolateValues(d.pell, year),
-					gradrate: interpolateValues(d.gradrate, year),
-					gap: interpolateValues(d.gap, year),
-					total: interpolateValues(d.total, year),
-				};
-			});
-		};
 
 		// A bisector since many item's data is sparsely-defined.
 		var bisect = d3.bisector(function (d) {
@@ -363,8 +436,37 @@
 			return a[1];
 		};
 
+		// Interpolates the dataset for the given (fractional) year.
+		var interpolateData = function (year) {
+			return data.map(function (d) {
+				return {
+					campus: d.campus,
+					pell: interpolateValues(d.pell, year),
+					gradrate: interpolateValues(d.gradrate, year),
+					gap: interpolateValues(d.gap, year),
+					total: interpolateValues(d.total, year)
+				};
+			});
+		};
+
+		// Updates the display to show the specified year.
+		var displayYear = function (year) {
+			dot.data(interpolateData(year), key).call(position).sort(order);
+			label.text(Math.round(year));
+			$('#slider').val(Math.round(year));
+		};
+
+		// Tweens the entire chart by first tweening the year, and then the data.
+		// For the interpolated data, the dots and label are redrawn.
+		var tweenYear = function () {
+			var year = d3.interpolateNumber(cs.year_start, cs.year_end);
+			return function(t) {
+				displayYear(year(t));
+			};
+		};
+
 		// Add a dot per item. Initialize the data and set the colors.
-		var dot = svg.append('g')
+		dot = svg.append('g')
 			.attr('class', 'dots')
 			.selectAll('.dot')
 			.data(interpolateData(cs.year_start))
@@ -417,7 +519,7 @@
 		$('button').on('click', function () {
 			update();
 			hide_tooltips();
-			var timer1;
+			//var timer1;
 			label.text(cs.year_start);
 		});
 		$('#slider').off();
@@ -425,104 +527,9 @@
 			svg.transition().duration(cs.duration);
 			displayYear($('#slider').val());
 		});
-		//console.log(JSON.stringify(['plotdata2',data]));
 		apply_selection();
-		//console.log(JSON.stringify(['plotdata3',data]));
 	};
 
-	var create_legend = function (svg, data) {
-		var legend = svg.selectAll('.legend')
-			.data(data)
-			.enter().append('g')
-			.attr('class', 'legend')
-			.attr('transform', function (d, i) { return 'translate(20,' + i * 17.7 + ')'; });
-
-		legend.append('rect')
-			.attr('class', 'legendrect')
-			.attr('x', cs.width)
-			.attr('width', 12)
-			.attr('height', 12)
-			.style('fill', function(d) { return cs.scale.color(xcolor(d)); });
-
-		legend.append('text')
-			.attr('x', cs.width + 16)
-			.attr('y', 5)
-			.attr('dy', 7)
-			.style('font-size', '13px').style('opacity', 1)
-			.style('font-weight', function (d) {return (cs.campuses[d.campus].selected ? '800' : '400');})
-			.text(function (d) { return d.campus; });
-
-		legend.on('mouseover', function (d) {
-			d3.selectAll('.legend')
-				.style('opacity', 0.7);
-			var _this = this;
-			d3.select(_this)
-				.style('opacity', 1);
-			d3.selectAll('.dot')
-				.style('opacity', function (d) {
-					return (cs.campuses[d.campus].selected
-						? 1
-						: .2)
-				});
-			
-			if (cs.campuses[d.campus].selected) { // indicate already selected with thicker stroke on legend campus mouseover
-				d3.select('#' + maketag(d.campus))
-					.style('stroke-width', 2).style('stroke', '#111');
-			}
-			d3.select('#' + maketag(d.campus))
-				.style('opacity', 1);
-		})
-		.on('click', function (d, i) {
-			cs.campuses[d.campus].selected = !cs.campuses[d.campus].selected; // perform toggle
-			apply_selection(); // apply to legend, dot style and dot order
-		})
-		.on('mouseout', function(type) {
-				d3.selectAll('.legend')
-					.style('opacity', 1);
-				d3.selectAll('.dot')
-					.style('opacity', 1);
-				apply_selection();
-		});
-	};
-
-	var load_data = (function () {
-		var datacache = {}; // in closure
-		return function (config, callback) {
-			//console.log(JSON.stringify(config));
-			if (datacache.hasOwnProperty(config.data_url)) {
-				callback(datacache[config.data_url], config);
-			} else {
-				$.ajax({
-					url: config.data_url,
-					datatype: "json",
-					success: function (result) {
-						var json_object = (typeof result === 'string')
-							? JSON.parse(result)
-							: result;
-						//console.log(JSON.stringify(config, json_object));
-						json_object.sort(function (a, b) {
-							return a.campus < b.campus ? -1 : a.campus > b.campus ? 1 : 0;
-						});
-						datacache[config.data_url] = json_object;
-						callback(json_object, config);
-					}
-				});
-			}
-		};
-	}());
-/*
-	//var retained_data;
-	var load_data = function (url, callback) {
-		if (cs.retained_data !== null) {
-			callback(cs.retained_data);
-		} else {
-			d3.json(url, function (data) {
-				cs.retained_data = data;
-				callback(data);
-			});
-		}
-	};
-*/
 	var init_bubble = function (callback) {
 		cs.scale.x = d3.scale.linear().domain(cs.dimension_map.x.slice(1)).range([0, cs.width]);
 		cs.scale.y = d3.scale.linear().domain(cs.dimension_map.y.slice(1)).range([cs.height, 0]);
@@ -531,8 +538,6 @@
 		// above function returns color mapped to campus, formerly d3.scale.category20()
 
 		// once the data is completely loaded, plot data points and generate legend
-		//load_data(cs.data_url, function (data) {
-		//console.log(JSON.stringify(cs));
 		load_data(cs, function (data) {
 			$('#chart1-plotarea').empty(); // remove old svg before recreating at different size
 			svg = build_chart();
@@ -549,7 +554,8 @@
 	Highcharts.setOptions({
 		colors: cs.palette
 	});
-	var series_state = {};
+	//var series_state = {};
+	series_state = {};
 
 	var create_chart = function (config, data) {
 		var fmt1 = config.tooltip_label + ': {point.y:.0f}%<br/>Campus: {series.name}';
@@ -609,9 +615,7 @@
 		});
 	};
 
-	var create_tables = function (config, data) {
-		//console.log(JSON.stringify(config));
-		//console.log(JSON.stringify(data));
+	var create_tables = function (data) {
 		var table1 = [];
 		var table2 = [];
 		var table3 = [];
@@ -626,7 +630,6 @@
 			});
 		});
 		var years = Object.keys(yearmap).sort();
-		//console.log(years);
 		data.forEach(function (ds) {
 			var t1row = {};
 			var t2row = {};
@@ -705,52 +708,8 @@
 		$('#bublin_table3').html(table3_html);
 		$('#bublin_table4').html(table4_html);
 	};
-/*
-	var load_data = function (config, callback) {
-		$.ajax({
-			url: cs.data_url,
-			datatype: "json",
-			success: function (result) {
-				var json_object = (typeof result === 'string')
-					? JSON.parse(result)
-					: result;
-				// Ensure dataset is sorted by campus name
-				json_object.sort(function (a, b) {
-					return a.campus < b.campus ? -1 : a.campus > b.campus ? 1 : 0;
-				});
-				cs.retained_data = json_object;
-				callback(json_object, config);
-			}
-		});
-	};
-*/
-	var update_series = function (mode) {
-		var pchart = $('#chart0').highcharts();
-		if (pchart) {
-			if (mode) { // save selected
-				pchart.series.forEach(function (e) {
-					var attributes = e.userOptions;
-					if (attributes.zIndex === 2) {
-						cs.campuses[attributes.name].selected = attributes.visible; // set selected
-					}
-				});
-			} else { // load selected
-				pchart.series.forEach(function (e) {
-					var attributes = e.userOptions;
-					var tf;
-					if (attributes.zIndex === 2) {
-						tf = (cs.campuses[attributes.name].selected || false); // get selected
-						series_state[attributes.name] = tf;
-						e.userOptions.visible = tf;
-					}
-				});
-			}
-		}
-		return series_state;
-	};
-	
+
 	var update_chart = function (config, callback) {
-		//console.log(JSON.stringify(config));
 		load_data(config, function (data, config) {
 			$('#chart0').off('click');
 			$('#chart0').on('click', function () { // listens for click on trends legend
@@ -765,10 +724,10 @@
 				var series = [];
 				var campus = campus_data.campus;
 				campus_data[attribute].forEach(function (item, i) {
-					var key = item[0]; // year
-					if (key <= config.year_end && key >= config.year_start) {
+					var yr = item[0]; // year
+					if (yr <= config.year_end && yr >= config.year_start) {
 						var value = item[1];
-						series.push({'name': key, 'y': value});
+						series.push({'name': yr, 'y': value});
 						if (null_series.length < i) {
 							null_series.push(null);
 						}
@@ -779,14 +738,14 @@
 			});
 			multiseries.push({'name': 'all', 'id': 'gray', 'data': null_series, 'color': 'transparent'});
 			create_chart(config, multiseries.concat(multigray));
-			create_tables(config, data);
+			create_tables(data);
 			if (callback) {
 				window.setTimeout(function () {callback();}, 0);
 			}
 		});
 	};
 
-	var display_tab = function (tabid, mode) {
+	var display_tab = function (tabid) {
 		switch (tabid) {
 			case 'explanations':
 			break;
@@ -802,14 +761,14 @@
 			break;
 			case 'chart':
 				$('#chart1').hide();
-				init_bubble(function () {});
+				init_bubble(function () {return;});
 				$('#chart1').show();
 			break;
 			default:
 				$('#chart1').hide();
-				init_bubble(function () {});
+				init_bubble(function () {return;});
 				$('#chart1').show();
-			break;
+			//break;
 		}
 	};
 
@@ -898,7 +857,6 @@
 			$('#chart1 button').css('visibility', 'hidden');
 			$('#chart1').hide();
 			init_bubble(function () {
-				//update_series();
 				$('#chart1').show();
 				$('#chart1 button').css('visibility', 'visible');
 				$('#chart1 .controls div').css('visibility', 'visible');
@@ -907,21 +865,25 @@
 
 		$('#yvalue_selector').on('change', function (e) {
 			var value = e.target.value;
-			cs.yvalue = {'gap':'gap', 'pell':'pell', 'gradrate':'gradrate'}[value];
-			cs.axis_y_title = {'gap': 'URM Achievement Gap (%)', 'pell': 'Pell Recipient Enrollment (%)', 'gradrate': 'Graduation Rate (%)'}[value];
-			cs.tooltip_label = {'gap': 'URM Gap', 'pell': 'Pell Enrollment', 'gradrate': 'Grad Rate'}[value];
+			var label_map = {
+				'gap': ['gap', 'URM Achievement Gap (%)', 'URM Gap'],
+				'pell': ['pell', 'Pell Recipient Enrollment (%)', 'Pell Enrollment'],
+				'gradrate': ['gradrate', 'Graduation Rate (%)', 'Grad Rate']
+			};
+			cs.yvalue = label_map[value][0]; //{'gap':'gap', 'pell':'pell', 'gradrate':'gradrate'}[value];
+			cs.axis_y_title = label_map[value][1]; //{'gap': 'URM Achievement Gap (%)', 'pell': 'Pell Recipient Enrollment (%)', 'gradrate': 'Graduation Rate (%)'}[value];
+			cs.tooltip_label = label_map[value][2]; //{'gap': 'URM Gap', 'pell': 'Pell Enrollment', 'gradrate': 'Grad Rate'}[value];
 			update_chart(cs);
 		});
 
 		$('#dataset_filter1').on('change', function (e) {
 			ctrl_values[0] = e.target.value;
 			ctrl_values[1] = populate_filter2(ctrl_values[0]);
-			
 			reconfig(ctrl_values);
 
 			if (tabid === 'chart') {
 				$('#chart1').hide();
-				init_bubble(function () {});
+				init_bubble(function () {return;});
 				$('#chart1').show();
 			} else if (tabid === 'trends' || tabid === 'table') {
 				update_chart(cs); // get selected
@@ -933,12 +895,11 @@
 
 		$('#dataset_filter2').on('change', function (e) {
 			ctrl_values[1] = e.target.value;
-			
 			reconfig(ctrl_values);
 
 			if (tabid === 'chart') {
 				$('#chart1').hide();
-				init_bubble(function () {});
+				init_bubble(function () {return;});
 				$('#chart1').show();
 			} else if (tabid === 'trends' || tabid === 'table') {
 				update_chart(cs); // get selected

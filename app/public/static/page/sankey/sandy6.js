@@ -180,7 +180,7 @@
 		}
 		template = template.replace('{type}', type).replace('{what}', what).replace('{when}', whenstr);
 		$('#contentsubheader').text(template);
-	}
+	};
 
 	var build_table = function (cs, data) {
 		var row_tpl = '\n\n<tr><td>{enrolled}</td><td>{graduated}</td><td>{count}</td></tr>';

@@ -10,9 +10,11 @@
 		var cycle = palette.length - 3; // last 3 are reserved for [pivot, undeclared, other]
 		if (str === pivot) {
 			return cycle + 0;
-		} else if (str === 'Undeclared') {
+		}
+		if (str === 'Undeclared') {
 			return cycle + 1;
-		} else if (str === 'Other') {
+		}
+		if (str === 'Other') {
 			return cycle + 2;
 		}
 		var offset = 113;
@@ -20,7 +22,7 @@
 		var normal = str.toUpperCase().replace(/^[A-Z]/g, '');
 		var scores = [];
 		var score = 0;
-		normal.split('').forEach(function (el, i, a) {
+		normal.split('').forEach(function (el, i) {
 			scores.unshift(normal.charCodeAt(i) << 2);
 			if (i > 1) {
 				scores.push(((normal.charCodeAt(i)) ^ (normal.charCodeAt(i-1) << 1)) ^ normal.charCodeAt(i - 2) << 2);
@@ -33,7 +35,7 @@
 	};
 
 	// a helper function for creating node labels
-	var label_nodes = function (name, source, target, y, dy) {
+	var label_nodes = function (name, source, y, dy) {
 		d3.selectAll('#migrations_chart').append('div')
 			.attr('class', 'nodelabel')
 			.style('padding', '1px')
@@ -55,7 +57,7 @@
 			.style('top', function () {
 				return (dy + y - 2) + 'px';
 			})
-			.html(function(d) {
+			.html(function() {
 				return '<span>' + name + '</span>';
 			});
 	};
@@ -171,7 +173,7 @@
 			.enter().append("g")
 			.attr("class", "node")
 			.attr("transform", function(d) { 
-				label_nodes(d.name, d.sourceLinks, d.targetLinks, d.y, d.dy / 2);
+				label_nodes(d.name, d.sourceLinks, d.y, d.dy / 2);
 				return "translate(" + d.x + "," + d.y + ")";
 			});
 

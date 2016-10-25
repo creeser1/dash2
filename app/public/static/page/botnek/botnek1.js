@@ -100,7 +100,7 @@
 				var xz = data.key4[val];
 				var z = xz[1];
 				var code = data.key3[key][0];
-				top3.push([z, code])
+				top3.push([z, code]);
 			});
 			Object.keys(selected).forEach(function (key) {
 				var val = selected[key];
@@ -114,7 +114,7 @@
 			series.push({name: type, data: output});
 		});
 		top3.sort(function (a, b) {return b[0] - a[0];});
-		top3 = top3.filter(function (el, i, a) {return i < 1 || el[1] !== a[i - 1][1]});
+		top3 = top3.filter(function (el, i, a) {return i < 1 || el[1] !== a[i - 1][1];});
 		top3 = top3.slice(0, 3);
 		top3.forEach(function (item, i) {
 			card[item[1]] = i + 1;
@@ -128,7 +128,7 @@
 	};
 
 	var construct_data_url = function (config) {
-		var pattern = / /g;
+		var pattern = /\s/g;
 		var path_tpl = '/data/botnek/{campus}/{major}_min.json';
 		var path = path_tpl.replace('{campus}', config.campus)
 			.replace('{major}', config.major)

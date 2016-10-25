@@ -4,12 +4,12 @@
 	var cs = { // chart_state
 	};
 	var create_chart = function (config, data) {
-		var fmt1 = function (y,x) {
+		var fmt1 = function () {
 			var yearnum = config.period.slice(0,1);
 			return 'Year: ' + this.points[0].point.name + '<br />' + this.points[0].point.dif + ' students graduated <br />only one term beyond ' + yearnum + ' years';
 		};
 		var txt1 = 'Graduation Rate (%)';
-		var txt2 = '';
+		//var txt2 = '';
 		$('#chart1').highcharts({
 			credits: {
 				enabled: false
@@ -112,15 +112,15 @@
 				yr25.push({"name": yr, "y": row[0][4], "dif": row[0][0]});
 				yr3.push({"name": yr, "y": (yr === ultimate_year ? null : row[1][3]), "dif": row[1][0]});
 				yr35.push({"name": yr, "y": (yr === ultimate_year ? null : row[1][4]), "dif": row[1][0]});
-				yr4.push({"name": yr, "y": (yr === ultimate_year || yr === penultimate_year ? null : row[2][3]), "dif": row[2][0]});
-				yr45.push({"name": yr, "y": (yr === ultimate_year || yr === penultimate_year ? null : row[2][4]), "dif": row[2][0]});
+				yr4.push({"name": yr, "y": ((yr === ultimate_year || yr === penultimate_year) ? null : row[2][3]), "dif": row[2][0]});
+				yr45.push({"name": yr, "y": ((yr === ultimate_year || yr === penultimate_year) ? null : row[2][4]), "dif": row[2][0]});
 			} else {
 				yr4.push({"name": yr, "y": row[2][3], "dif": row[2][0]});
 				yr45.push({"name": yr, "y": row[2][4], "dif": row[2][0]});
 				yr5.push({"name": yr, "y": (yr === ultimate_year ? null : row[3][3]), "dif": row[3][0]});
 				yr55.push({"name": yr, "y": (yr === ultimate_year ? null : row[3][4]), "dif": row[3][0]});
-				yr6.push({"name": yr, "y": (yr === ultimate_year || yr === penultimate_year ? null : row[4][3]), "dif": row[4][0]});
-				yr65.push({"name": yr, "y":  (yr === ultimate_year || yr === penultimate_year ? null : row[4][4]), "dif": row[4][0]});
+				yr6.push({"name": yr, "y": ((yr === ultimate_year || yr === penultimate_year) ? null : row[4][3]), "dif": row[4][0]});
+				yr65.push({"name": yr, "y":  ((yr === ultimate_year || yr === penultimate_year) ? null : row[4][4]), "dif": row[4][0]});
 			}
 		});
 		switch (config.period) {
@@ -147,7 +147,7 @@
 			default:
 				output.push({"name": "2 Year Grad Rate", "color": "#35c", "data": yr2});
 				output.push({"name": "2.5 Year Grad Rate", "color": "#3c5", "data": yr25});
-				break;
+				//break;
 		}
 		return output;
 	};
@@ -245,7 +245,7 @@
 			'3yr': ['3-Year', '3.5-Year', '3-Year Count(N)', '3.5-Year Count(N)'],
 			'4yr': ['4-Year', '4.5-Year', '4-Year Count(N)', '4.5-Year Count(N)'],
 			'5yr': ['5-Year', '5.5-Year', '5-Year Count(N)', '5.5-Year Count(N)'],
-			'6yr': ['6-Year', '6.5-Year', '6-Year Count(N)', '6.5-Year Count(N)'],
+			'6yr': ['6-Year', '6.5-Year', '6-Year Count(N)', '6.5-Year Count(N)']
 		};
 		var h = map[cs.period];
 		var row_tpl = '\n\n<tr><td>{coyear}</td><td>{xyear}</td><td>{xaddterm}</td><td>{nyear}</td><td>{nadd}</td><td>{ndif}</td></tr>';
