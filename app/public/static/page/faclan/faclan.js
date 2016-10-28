@@ -33,7 +33,7 @@
 
 		ctx.strokeStyle = '#11c0d7';
 		ctx.fillStyle = '#11c0d7';
-		ctx.lineWidth = 5;
+		ctx.lineWidth = 3;
 
 		ctx.arc(20,275,9,0,2*Math.PI);
 		ctx.fill();
