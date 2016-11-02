@@ -41,7 +41,8 @@ $app->get('/dashboard/{id}', function ($request, $response, $args) {
 	'what-paths-do-they-follow' => '144',
 	'additional-term-gradrates' => '174',
 	'bottleneck-courses' => '179',
-	'faculty-matter' => '184'
+	'faculty-matter' => '184',
+	'student-and-faculty-diversity' => '192'
 	];
 	if (array_key_exists($args['id'], $whitelist)) {
 		$id = $whitelist[$args['id']];
@@ -73,7 +74,8 @@ $app->get('/edit/{id}', function ($request, $response, $args) {
 	'what-paths-do-they-follow' => '144',
 	'additional-term-gradrates' => '174',
 	'bottleneck-courses' => '179',
-	'faculty-matter' => '184'
+	'faculty-matter' => '184',
+	'student-and-faculty-diversity' => '192'
 	];
 	if (array_key_exists($args['id'], $whitelist)) { // avoid database auth lookups on non-whitelisted pages
 		$id = $whitelist[$args['id']];

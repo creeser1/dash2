@@ -1,0 +1,137 @@
+.bar--positive {
+  fill: steelblue;
+}
+
+.bar--negative {
+  fill: #fa0;
+}
+
+.bar--none {
+  fill: transparent;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+#chart0 {
+  position:relative;
+  width:1150px;
+  height:790px;
+  border:1px solid #aaa;
+  margin:20px;
+}
+#chart0 footer {
+  position:absolute;
+  bottom:10px;
+  left:10px;
+}
+
+#chart-controls {
+  display:block;
+  position:relative;
+  width:1090px;
+  height:70px;
+  background:#ccc;
+  margin:50px 0 0 30px;
+  font-family:sans-serif;
+  font-size:16px;
+  font-weight:600;
+}
+#student-bar {
+  display:inline-block;
+  position:relative;
+  float:left;
+  width:440px;
+  color:#444;
+  text-align:center;
+}
+#faculty-bar {
+  display:inline-block;
+  position:relative;
+  float:left;
+  width:440px;
+  color:#444;
+  text-align:center;
+}
+#label-bar {
+  display:inline-block;
+  position:relative;
+  float:left;
+  margin-top: -20px;
+  width:200px;
+  color:#444;
+  background:#fff;
+  text-align:center;
+}
+#facultytypeselector {
+  display:inline-block;
+  position:absolute;
+  right:20px;
+  top:25px;
+  width:120px;
+}
+
+#chartpair0 {
+  position:relative;
+  top:100px;
+  width:1070px;
+  height:500px;
+  display:block;
+  background:#fff;
+}
+
+#charta0 {
+  position:absolute;
+  width:500px;
+  height:450px;
+  left:0;
+  margin:15px;
+  top:8px;
+}
+
+#chartb0 {
+  position:absolute;
+  width:500px;
+  height:450px;
+  right:0;
+  margin:15px;
+  top:8px;
+}
+#chartpair0legend {
+  width:900px;
+  height:30px;
+  position:absolute;
+  bottom:0;
+  left:85px;
+  background:#fff;
+}
+#chartpair0legend li {
+  font-size:12px;
+  font-weight:600;
+  float:left;
+  list-style:none;
+  margin:0 28px;
+}
+#chartpair0legend li span {
+	display:inline-block;
+	width: 14px;
+	height:14px;
+	background:#bbb;
+	margin:10px 3px;
+	border-radius:7px;
+	color:transparent;
+}
+
+.footnote {
+  position:absolute;
+  left:30px;
+  bottom:30px;
+}
+
